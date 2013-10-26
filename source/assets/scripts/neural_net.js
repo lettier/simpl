@@ -5,7 +5,6 @@
  * http://www.lettier.com/
  * 
  * Code ported and modified to JS from original C++ source ( http://www.ai-junkie.com/ann/evolved/nnt1.html ) as written by Mat Buckland.
- *
  * 
  * Implements a neural network for learning.
  * 
@@ -51,18 +50,18 @@ function Neuron_Layer( nNumberNeurons, nNumberInputsPerNeuron )
 
 }
 
-function Neural_Net( nInputs, nOutputs, nHiddenLayers, nNeuronsPerHiddenLayer, bias )
+function Neural_Net( params )
 {
 
-	this.number_of_inputs = nInputs;
+	this.number_of_inputs = params.nInputs;
 	
-	this.number_of_outputs = nOutputs;
+	this.number_of_outputs = params.nOutputs;
 
-	this.number_of_hidden_layers = nHiddenLayers;
+	this.number_of_hidden_layers = params.nHiddenLayers;
 
-	this.neurons_per_hidden_layer = nNeuronsPerHiddenLayer;
+	this.neurons_per_hidden_layer = params.nNeuronsPerHiddenLayer;
 	
-	this.bias = bias;
+	this.bias = params.bias;
 
 	this.layers = new Array( );
 

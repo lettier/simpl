@@ -8,40 +8,40 @@
 	* 
 	*/
 	
-	require( '' );
+	require( '/virtual/users/e14157-14235/storage/vars.php' );
 	
-	$link = mysql_connect( "localhost", $c, $d ) or die( mysql_error( ) );
+	$link = mysql_connect( "localhost", $a, $b ) or die( mysql_error( ) );
 	
-	$generation = intval( mysql_real_escape_string( $_POST[ 'generation' ] ) );
+	$generation_number = intval( mysql_real_escape_string( $_POST[ 'generation_number' ] ) );
 	
-	$average_fitness = floatval( mysql_real_escape_string( $_POST[ 'average_fitness' ] ) );
+	$average_fitness   = floatval( mysql_real_escape_string( $_POST[ 'average_fitness' ] ) );
 	
-	$population_size = intval( mysql_real_escape_string( $_POST[ 'population_size' ] ) );
+	$population_size   = intval( mysql_real_escape_string( $_POST[ 'population_size' ] ) );
 	
-	$number_of_parameters = intval( mysql_real_escape_string( $_POST[ 'number_of_parameters' ] ) ); 
+	$number_of_genes_per_genome = intval( mysql_real_escape_string( $_POST[ 'number_of_genes_per_genome' ] ) ); 
 	
-	$parameters = mysql_real_escape_string( $_POST[ 'parameters' ] ); 	
+	$population_genes = mysql_real_escape_string( $_POST[ 'population_genes' ] ); 	
 	
 	mysql_select_db( "lettier0" ) or die( mysql_error( ) );
 	
-	$row_sql = mysql_query( "SELECT MAX( `generation` ) AS max FROM `simpl_genomes` WHERE `population_size` = $population_size AND `number_of_parameters` = $number_of_parameters;" );
+	$row_sql = mysql_query( "SELECT MAX( `generation_number` ) AS max FROM `SIMPL_GENOMES` WHERE `population_size` = $population_size AND `number_of_genes_per_genome` = $number_of_genes_per_genome;" );
 	$row = mysql_fetch_array( $row_sql );
-	$biggest_generation = intval( $row[ 'max' ] );
+	$highest_generation_number = intval( $row[ 'max' ] );
 	
 	$result = null;
 	
-	if ( !is_null( $biggest_generation ) OR !empty( $biggest_generation ) OR $biggest_generation != 0  )
+	if ( !is_null( $highest_generation_number ) OR !empty( $highest_generation_number ) OR $highest_generation_number != 0  )
 	{
 	
-		if ( $generation > $biggest_generation )
+		if ( $generation_number > $highest_generation_number )
 		{
 			
-			$result = mysql_query( "INSERT INTO `lettier0`.`simpl_genomes` ( `id`, `entry_date`, `generation`, `average_fitness`, `population_size`, `number_of_parameters`, `parameters` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation, $average_fitness, $population_size, $number_of_parameters, '$parameters' );" ); 
+			$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_GENOMES` ( `id`, `entry_date`, `generation_number`, `average_fitness`, `population_size`, `number_of_genes_per_genome`, `population_genes` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation_number, $average_fitness, $population_size, $number_of_genes_per_genome, '$population_genes' );" ); 
 			
 			if ( $result )
 			{
 				
-				echo "[Store_Genomes] Added genome generation successfully.";
+				echo "[Store_Genomes] Added generation successfully.";
 				
 			}
 			else
@@ -54,19 +54,19 @@
 		else
 		{
 		
-			echo "[Store_Genomes] Need generation higher than $biggest_generation.";
+			echo "[Store_Genomes] Need generation number higher than $highest_generation_number.";
 			
 		}
 	}
 	else
 	{
 	
-		$result = mysql_query( "INSERT INTO `lettier0`.`simpl_genomes` ( `id`, `entry_date`, `generation`, `average_fitness`, `population_size`, `number_of_parameters`, `parameters` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation, $average_fitness, $population_size, $number_of_parameters, '$parameters' );" ); 
+		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_GENOMES` ( `id`, `entry_date`, `generation_number`, `average_fitness`, `population_size`, `number_of_genes_per_genome`, `population_genes` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation_number, $average_fitness, $population_size, $number_of_genes_per_genome, '$population_genes' );" ); 
 			
 		if ( $result )
 		{
 			
-			echo "[Store_Genomes] Added genome generation successfully.";
+			echo "[Store_Genomes] Added generation successfully.";
 			
 		}
 		else
