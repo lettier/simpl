@@ -18,7 +18,11 @@
 	
 	$population_size   = intval( mysql_real_escape_string( $_POST[ 'population_size' ] ) );
 	
-	$number_of_genes_per_genome = intval( mysql_real_escape_string( $_POST[ 'number_of_genes_per_genome' ] ) ); 
+	$number_of_genes_per_genome = intval( mysql_real_escape_string( $_POST[ 'number_of_genes_per_genome' ] ) );
+	
+	$crossover_probability = floatval( mysql_real_escape_string( $_POST[ 'crossover_probability' ] ) );
+	
+	$mutation_probability  = floatval( mysql_real_escape_string( $_POST[ 'mutation_probability' ] ) );
 	
 	$population_genes = mysql_real_escape_string( $_POST[ 'population_genes' ] ); 	
 	
@@ -30,13 +34,13 @@
 	
 	$result = null;
 	
-	if ( !is_null( $highest_generation_number ) OR !empty( $highest_generation_number ) OR $highest_generation_number != 0  )
+	if ( !is_null( $highest_generation_number ) AND !empty( $highest_generation_number ) AND $highest_generation_number != 0  )
 	{
 	
 		if ( $generation_number > $highest_generation_number )
 		{
 			
-			$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_GENOMES` ( `id`, `entry_date`, `generation_number`, `average_fitness`, `population_size`, `number_of_genes_per_genome`, `population_genes` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation_number, $average_fitness, $population_size, $number_of_genes_per_genome, '$population_genes' );" ); 
+			$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_GENOMES` ( `id`, `entry_date`, `generation_number`, `average_fitness`, `population_size`, `number_of_genes_per_genome`, `crossover_probability`, `mutation_probability`, `population_genes` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation_number, $average_fitness, $population_size, $number_of_genes_per_genome, $crossover_probability, $mutation_probability, '$population_genes' );" ); 
 			
 			if ( $result )
 			{
@@ -61,8 +65,8 @@
 	else
 	{
 	
-		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_GENOMES` ( `id`, `entry_date`, `generation_number`, `average_fitness`, `population_size`, `number_of_genes_per_genome`, `population_genes` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation_number, $average_fitness, $population_size, $number_of_genes_per_genome, '$population_genes' );" ); 
-			
+		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_GENOMES` ( `id`, `entry_date`, `generation_number`, `average_fitness`, `population_size`, `number_of_genes_per_genome`, `crossover_probability`, `mutation_probability`, `population_genes` ) VALUES ( NULL, CURRENT_TIMESTAMP, $generation_number, $average_fitness, $population_size, $number_of_genes_per_genome, $crossover_probability, $mutation_probability, '$population_genes' );" );			
+		
 		if ( $result )
 		{
 			

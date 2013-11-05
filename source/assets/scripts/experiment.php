@@ -12,13 +12,13 @@
 	
 	$link   = mysql_connect( "localhost", $a, $b ) or die( mysql_error( ) );
 	
-	$action            = mysql_real_escape_string( $_POST[ 'action' ] );
+	$action = mysql_real_escape_string( $_POST[ 'action' ] );
 	
 	$generation_number = intval( mysql_real_escape_string( $_POST[ 'generation_number' ] ) );	
 	
-	$crossover_rate    = floatval( mysql_real_escape_string( $_POST[ 'crossover_rate' ] ) );
+	$crossover_probability = floatval( mysql_real_escape_string( $_POST[ 'crossover_probability' ] ) );
 	
-	$mutation_rate     = floatval( mysql_real_escape_string( $_POST[ 'mutation_rate' ] ) );
+	$mutation_probability  = floatval( mysql_real_escape_string( $_POST[ 'mutation_probability' ] ) );
 	
 	$average_fitness = 0;
 	
@@ -33,7 +33,7 @@
 	
 		$average_fitness = floatval( mysql_real_escape_string( $_POST[ 'average_fitness' ] ) );
 		
-		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_AVGS` ( `id`, `generation_number`, `average_fitness`, `crossover_rate`, `mutation_rate` ) VALUES ( NULL, $generation_number, $average_fitness, $crossover_rate, $mutation_rate );" ); 
+		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_AVGS` ( `id`, `generation_number`, `average_fitness`, `crossover_probability`, `mutation_probability` ) VALUES ( NULL, $generation_number, $average_fitness, $crossover_probability, $mutation_probability );" ); 
 			
 		if ( $result )
 		{
@@ -56,7 +56,7 @@
 		
 		$genes = mysql_real_escape_string( $_POST[ 'genes' ] );
 		
-		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_10TH_TOPS` ( `id`, `generation_number`, `fitness`, `crossover_rate`, `mutation_rate`, `genes` ) VALUES ( NULL, $generation_number, $fitness, $crossover_rate, $mutation_rate, '$genes' );" ); 
+		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_10TH_TOPS` ( `id`, `generation_number`, `fitness`, `crossover_probability`, `mutation_probability`, `genes` ) VALUES ( NULL, $generation_number, $fitness, $crossover_probability, $mutation_probability, '$genes' );" ); 
 			
 		if ( $result )
 		{
@@ -72,10 +72,65 @@
 		}
 	
 	}
+	else if ( $action === "tournament_start" )
+	{
+	
+		$result = mysql_query( "SELECT `generation_number`, `fitness`, `crossover_probability`, `mutation_probability`, `genes` FROM `lettier0`.`SIMPL_EXP_10TH_TOPS` ORDER BY `generation_number` ASC;" );
+		
+		if ( $result )
+		{
+			
+			$row = 0;
+		
+			$echo_string = "";
+			
+			while ( $row = mysql_fetch_array( $result, MYSQL_ASSOC ) )
+			{
+			
+				$echo_string .= $row[ 'generation_number' ] . ";" . $row[ 'fitness' ] . ";" . $row[ 'crossover_probability' ] . ";" . $row[ 'mutation_probability' ] . ";" . $row[ 'genes' ] . "^";
+				
+			}
+			
+			$echo_string = substr( $echo_string, 0, -1 );
+			
+			echo $echo_string;
+			
+		}
+		else
+		{
+			
+			echo mysql_error( $link );
+			
+		}
+	
+	}
+	else if ( $action === "tournament_results" )
+	{
+	
+		$fitness = floatval( mysql_real_escape_string( $_POST[ 'fitness' ] ) );
+		
+		$average_ball_in_play_time = floatval( mysql_real_escape_string( $_POST[ 'average_ball_in_play_time' ] ) );
+		
+		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_TOUR_RSLTS` ( `id`, `generation_number`, `fitness`, `crossover_probability`, `mutation_probability`, `average_ball_in_play_time` ) VALUES ( NULL, $generation_number, $fitness, $crossover_probability, $mutation_probability, $average_ball_in_play_time );" ); 
+		
+		if ( $result )
+		{
+			
+			echo "[Experiment] Added tournament results successfully.";
+			
+		}
+		else
+		{
+			
+			echo mysql_error( $link );
+			
+		}
+	
+	}
 	else
 	{
 	
-		echo "[Experiment_One] Action not recognized.";
+		echo "[Experiment] Action not recognized.";
 		
 	}
 

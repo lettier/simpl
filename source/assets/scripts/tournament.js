@@ -12,11 +12,14 @@
  * 
  */
 
+var request_animation_id = null;
 
 var take_control = false;
 var pause        = false;
 var show_debug   = false;
 var stop_tournament = false;
+
+var use_perfect_paddle = false;
 
 var top_wall    = new Static_Object( "top_wall"    );
 var right_wall  = new Static_Object( "right_wall"  );
@@ -49,110 +52,84 @@ var debug_manager = new Debug_Manager( "debug" );
 
 var database_manager = new Database_Manager( );
 
+var neural_net_parameters = { 
+	
+	nInputs:                6,
+	nOutputs:               1,
+	nHiddenLayers:          1,
+	nNeuronsPerHiddenLayer: 5,
+	bias:                  -1
+	
+};
+
 var learner_parameters = {
-			
-	inputs:  6,
-	outputs: 1,
-	number_of_hidden_layers:  1,
-	neurons_per_hidden_layer: 5,
-	bias: -1,
-	activation_response: 1,	
+	
+	neural_network: neural_net_parameters,
+	number_of_players:                 10,
+	number_of_rounds_per_player:        5,
+	
 };
 
 var learner = {
 	
-	neural_net: null,
-	neural_net_output: null,
-	neural_network_weights: null,
-	evaluation_start_time: 0,
-	evaluation_end_time:   0,
-	evalutation_times: new Array( ),
-	evaluation_time_averages: new Array( ),
-	neural_network_round: 0,
+	parameters:         learner_parameters,
+	neural_net:                       null,
+	neural_net_output:                   0,
+	tournament_players:       new Array( ),
+	ball_in_play_start_time:             0,
+	ball_in_play_end_time:               0,
+	neural_network_round:                0,
 	evaluate_current_neural_network: false,
-	current_neural_net_in_evalutation: 0
+	current_player:                      0
 	
 };
 
-learner.neural_net = new Neural_Net( learner_parameters.inputs, learner_parameters.outputs, learner_parameters.number_of_hidden_layers, learner_parameters.neurons_per_hidden_layer, learner_parameters.bias );
-//learner.genetic_algorithm = new Genetic_Algorithm( learner_parameters.population_size, learner.neural_net.get_number_of_weights( ), learner_parameters.crossover_rate, learner_parameters.mutation_rate, learner_parameters.max_perturbation, learner_parameters.number_of_elite, learner_parameters.number_of_elite_copies );
-//learner.current_genetic_algorithm_population = learner.genetic_algorithm.get_population( );
+learner.neural_net = new Neural_Net( learner.parameters.neural_network );
 
-learner.neural_network_weights = new Array( );
+var data_string  = "action=tournament_start";
 
-nn_params_1 = [-0.6308077536523342,-0.6445777048356831,-0.06543419789522886,-0.4157566884532571,0.8347281534224749,-1,-0.7137395944446325,0.9448341284878552,-0.04132713424041867,-0.40678828209638596,0.7899634120985866,-0.5754600460641086,0.9310836736112833,0.17074120417237282,-1,0.23202748876065016,-0.4401500280946493,0.5206876113079488,0.2654289547353983,-0.6655746535398066,-0.03478712681680918,-0.8221576013602316,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,-0.006823110394179821,0.5337599823251367,-0.6616760645993054,-0.7204760136082768,0.4502879837527871,-0.44580011703590144,0.3891024016775191,-0.2700516958720982,-0.6889537568204105,-0.36635613115504384,0.6077786958776414,0.3701840038411319,0.17038335281483916,-0.4857739331200719,0.8621369996108115,-0.01063191853979592 ];
+database_manager.send_and_receive( "assets/scripts/experiment.php", data_string, database_manager, "tournament_start", false );
 
-learner.neural_network_weights.push( nn_params_1 ); //
+var tournament_population = database_manager.responses[ "tournament_start" ];
 
-nn_params_1 = [-0.6308077536523342,-0.6445777048356831,-0.06543419789522886,-0.4157566884532571,0.8347281534224749,-1,-0.7137395944446325,0.9448341284878552,-0.04132713424041867,-0.40678828209638596,0.7899634120985866,-0.5754600460641086,0.9894147474652135,0.1504967426019716,-1,0.23202748876065016,-0.4401500280946493,0.5206876113079488,0.2654289547353983,-0.6655746535398066,-0.03478712681680918,-0.8221576013602316,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,-0.006823110394179821,0.5337599823251367,-0.6616760645993054,-1,0.4502879837527871,-0.44580011703590144,0.3891024016775191,-0.2700516958720982,-0.6889537568204105,-0.36635613115504384,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [-0.6308077536523342,-0.6445777048356831,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7137395944446325,0.9448341284878552,-0.04132713424041867,-0.40678828209638596,0.7899634120985866,-0.5754600460641086,0.9310836736112833,0.17074120417237282,-1,0.23202748876065016,-0.4401500280946493,0.5206876113079488,0.2654289547353983,-0.6655746535398066,-0.19687079863923126,-0.8221576013602316,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,0.8952259295521892,0.5337599823251367,-0.6616760645993054,-1,0.9991016311298416,-0.7806278182524593,0.3891024016775191,-0.2700516958720982,-0.9521046204967187,-0.36635613115504384,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [-0.6308077536523342,-0.6445777048356831,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,1,-0.04132713424041867,-0.40678828209638596,0.7899634120985866,-0.5754600460641086,1,0.17074120417237282,-1,0.23202748876065016,-0.394215836064483,0.5206876113079488,0.2654289547353983,-0.6655746535398066,-0.19687079863923126,-1,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,1,0.5337599823251367,-0.6616760645993054,-1,0.9991016311298416,-0.7806278182524593,0.3891024016775191,-0.649224749933295,-0.9521046204967187,-0.36635613115504384,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [-0.6308077536523342,-0.6445777048356831,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,0.9964324755233633,-0.04132713424041867,-0.40678828209638596,1,-0.5754600460641086,1,0.17074120417237282,-1,0.6656698632462017,-0.394215836064483,1,0.2654289547353983,-0.6655746535398066,-0.19687079863923126,-1,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,1,0.5337599823251367,-0.6616760645993054,-1,0.9991016311298416,-0.7806278182524593,0.3891024016775191,-0.9831884570691974,-0.9521046204967187,-0.36635613115504384,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [ -0.6308077536523342,-1,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,0.9964324755233633,-0.04132713424041867,-0.40678828209638596,1,-0.5754600460641086,1,0.22557490335547156,-1,0.19697729100421885,-0.394215836064483,1,0.2654289547353983,-1,-0.19687079863923126,-1,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,1,0.5337599823251367,-0.6616760645993054,-1,0.6645146227877406,-0.7726354186509761,0.3891024016775191,-0.9831884570691974,-1,-0.36635613115504384,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [ -0.6308077536523342,-1,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,0.9964324755233633,-0.04132713424041867,-0.40678828209638596,1,-0.5754600460641086,1,0.22557490335547156,-1,0.19697729100421885,-0.394215836064483,1,0.2654289547353983,-0.5194456086473886,-0.19687079863923126,-1,-0.5723860836587846,0.2515766015276313,-0.1907372111454606,1,0.5337599823251367,-0.6616760645993054,-1,0.6645146227877406,-0.7726354186509761,0.3891024016775191,-0.9831884570691974,-1,-0.36635613115504384,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [ -0.6308077536523342,-1,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,0.9964324755233633,-0.04132713424041867,-0.40678828209638596,1,1,1,0.22557490335547156,-1,0.250415047199163,-0.394215836064483,1,0.2654289547353983,-0.6655746535398066,-0.19687079863923126,-0.7363738438918731,-0.5723860836587846,0.2515766015276313,-0.46981130552944217,1,0.5337599823251367,-0.6616760645993054,-1,0.2765082337949467,-0.7806278182524593,0.4263189574309918,0.03376184151873829,-1,-0.34966957139273547,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.6037728042992438 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [ -0.6308077536523342,-1,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,0.9964324755233633,-0.04132713424041867,-0.40678828209638596,1,1,0.6969325908116796,0.22557490335547156,-1,0.250415047199163,-0.394215836064483,1,0.2654289547353983,-0.5313330685926273,-0.17411928453401623,-0.7363738438918731,-0.5723860836587846,0.2515766015276313,-0.46981130552944217,1,0.5337599823251367,-0.6616760645993054,-1,0.2765082337949467,-0.7806278182524593,0.4263189574309918,1,-1,0.3890606009275801,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-nn_params_1 = [ -0.6308077536523342,-1,-0.06543419789522886,-1,0.8347281534224749,-1,-0.7260159603918838,0.9964324755233633,-0.04132713424041867,-0.40678828209638596,1,1,0.8475573379730275,0.22557490335547156,-1,0.250415047199163,-0.394215836064483,1,0.2654289547353983,-0.5313330685926273,-0.17411928453401623,-0.7363738438918731,-0.5723860836587846,0.2515766015276313,-0.46981130552944217,1,0.5337599823251367,-0.6616760645993054,-1,0.2765082337949467,-0.7806278182524593,0.4263189574309918,1,-1,-0.13810887916283712,0.6077786958776414,0.6913887674002651,-0.5983846797607839,0.43458935256882936,0.48828861908987164,0.5165349608287215 ];
-
-learner.neural_network_weights.push( nn_params_1 ); //
-
-learner.neural_net.put_weights( learner.neural_network_weights[ 0 ] );
-
-learner.current_neural_net_in_evalutation = 0;
-
-learner.neural_network_round = 1;
-
-learner.neural_net_output = 0;
-
-/*
-
-database_manager.send_and_receive( "assets/scripts/retrieve_genomes.php", "population_size=" + learner_parameters.population_size + "&number_of_parameters=" + learner.genetic_algorithm.chromosome_length, database_manager, "initial_top_population", false );
-
-var top_database_population_parameters = database_manager.responses[ "initial_top_population" ];
-
-if ( top_database_population_parameters != "" )
+if ( tournament_population.charAt( 0 ) != ";" )
 {
 	
-	top_database_population_parameters = top_database_population_parameters.split( "," );
+	// String format: generation_number;fitness;crossover_probability;mutation_probability;genes^...
 	
-	for ( var i = 0; i < top_database_population_parameters.length; ++i )
+	tournament_population = tournament_population.split( "^" );
+	
+	for ( var i = 0; i < tournament_population.length; ++i )
 	{
 		
-		top_database_population_parameters[ i ] = parseFloat( top_database_population_parameters[ i ] );
+		var player = {
+			
+			generation_number:           parseInt(   tournament_population[ i ].split( ";" )[ 0 ] ),
+			fitness:                   parseFloat( tournament_population[ i ].split( ";" )[ 1 ] ),
+			crossover_probability:     parseFloat( tournament_population[ i ].split( ";" )[ 2 ] ),
+			mutation_probability:      parseFloat( tournament_population[ i ].split( ";" )[ 3 ] ),
+			genes:                                 tournament_population[ i ].split( ";" )[ 4 ],
+			ball_in_play_times:        new Array( ),
+			average_ball_in_play_time: 0
+		
+		};
+		
+		player.genes = player.genes.split( "," );
+		
+		for ( var j = 0; j < player.genes.length; ++j )
+		{
+			
+			player.genes[ j ] = parseFloat( player.genes[ j ] );
+			
+		}
+		
+		learner.tournament_players.push( player );
 		
 	}
 	
-	var top_population = learner.genetic_algorithm.replace_population_parameters( top_database_population_parameters );
-	
-	learner.neural_net.put_weights( top_population[ 0 ].weights );
+	learner.neural_net.put_weights( learner.tournament_players[ learner.current_player ].genes );	
 	
 }
-
-*/
 
 var ball_style = window.getComputedStyle( ball.dynamic_object.object, null);
 var ball_style_transform =  	ball_style.getPropertyValue( "-webkit-transform" ) ||
@@ -165,6 +142,8 @@ var ball_div_transform_angle_by = 20;
 
 function draw( time_stamp ) 
 {
+	
+	request_animation_id = window.requestAnimationFrame( draw );
 	
 	var time_delta = fps_monitor.get_time_delta( time_stamp );
 	
@@ -181,14 +160,10 @@ function draw( time_stamp )
 			debug_manager.add_or_update( "Ball", ball );
 		
 			handle_neural_network_ouput( );
-			
-			//debug_manager.add_or_update( "Current Genome", learner.current_genome_in_evalutation );
 
 			debug_manager.add_or_update( "NN", learner.neural_net );
 			
 			debug_manager.add_or_update( "NN Weights", learner.neural_net.get_weights( ) );
-			
-			//debug_manager.add_or_update( "GA", learner.genetic_algorithm );
 		
 			physics_engine.update( time_delta );
 			
@@ -235,8 +210,6 @@ function draw( time_stamp )
 		
 	}
 	
-	request_animation_id = window.requestAnimationFrame( draw );
-	
 }
 
 // The following stub was taken from https://gist.github.com/paulirish/1579671.
@@ -282,7 +255,9 @@ function draw( time_stamp )
 	}
 } ( ) );
 
-var request_animation_id = window.requestAnimationFrame( draw );
+learner.ball_in_play_start_time = new Date( ).getTime( );
+
+draw( );
 
 function reset( )
 {
@@ -454,39 +429,67 @@ function handle_neural_network_ouput( )
 
 	debug_manager.add_or_update( "NN Output", learner.neural_net_output );
 	
-	if ( learner.neural_net_output[ 0 ] < 0.0 )
+	if ( !use_perfect_paddle )
+	{	
+	
+		if ( learner.neural_net_output[ 0 ] < 0.0 )
+		{
+			
+			// Output indicates that we must go down the screen
+			// by some magnitude in the range (0,MAG_MAX].
+			
+			// Don't set a negative magnitude so multiply the output by -1 to
+			// make it positive and multiply this result by the starting paddle
+			// magnitude.
+			
+			paddle.set_magnitude( starting_paddle_magnitude * ( -1 * learner.neural_net_output[ 0 ] ) );
+			
+			paddle.set_angle( 270 );
+			
+		}
+		else if ( learner.neural_net_output[ 0 ] == 0.0 )
+		{
+			
+			// Don't move.
+			
+			paddle.set_magnitude( 0 );
+			
+			paddle.set_angle( starting_paddle_angle );
+			
+		}
+		else if ( learner.neural_net_output[ 0 ] > 0.0 )
+		{
+			
+			// Go up by some portion of the starting paddle magnitude.
+			
+			paddle.set_magnitude( starting_paddle_magnitude * learner.neural_net_output[ 0 ] );
+			
+			paddle.set_angle( 90.0 );
+			
+		}
+		
+	}	
+	else if ( use_perfect_paddle )
 	{
 		
-		// Output indicates that we must go down the screen
-		// by some magnitude in the range (0,MAG_MAX].
+		var difference = paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y;
 		
-		// Don't set a negative magnitude so multiply the output by -1 to
-		// make it positive and multiply this result by the starting paddle
-		// magnitude.
-		
-		paddle.set_magnitude( starting_paddle_magnitude * ( -1 * learner.neural_net_output[ 0 ] ) );
-		
-		paddle.set_angle( 270 );
-		
-	}
-	else if ( learner.neural_net_output[ 0 ] == 0.0 )
-	{
-		
-		// Don't move.
-		
-		paddle.set_magnitude( 0 );
-		
-		paddle.set_angle( starting_paddle_angle );
-		
-	}
-	else if ( learner.neural_net_output[ 0 ] > 0.0 )
-	{
-		
-		// Go up by some portion of the starting paddle magnitude.
-		
-		paddle.set_magnitude( starting_paddle_magnitude * learner.neural_net_output[ 0 ] );
-		
-		paddle.set_angle( 90.0 );
+		if ( difference < 0 )
+		{
+			
+			paddle.set_magnitude( -1 * difference * 10 );
+			
+			paddle.set_angle( 270 );
+			
+		}			
+		else if ( difference >= 0 )
+		{
+			
+			paddle.set_magnitude( difference * 10  );
+			
+			paddle.set_angle( 90.0 );
+			
+		}
 		
 	}
 	
@@ -495,142 +498,57 @@ function handle_neural_network_ouput( )
 function handle_neural_network_evaluation( )
 {	
 	
-	/*
+	pause = true;	
 	
-	if ( learner.current_genome_tracking.length % 2 == 0 ) // Even.
+	if ( learner.neural_network_round < learner.parameters.number_of_rounds_per_player )
 	{
-	
-		j = learner.current_genome_tracking.length / 2;
-		
-		// Go through tracking points and compare in pairs.
-		// (0<=>1), (2<=>3), ..., (n-2<=>n-1)
-		
-		do
-		{
-			
-			if ( learner.current_genome_tracking[ i ] == 0.0 && learner.current_genome_tracking[ i + 1 ] == 0.0 ) // On point.
-			{
-				
-				fitness += learner_parameters.fitness_credit_for_tracking;
-				
-			}
-			else if ( learner.current_genome_tracking[ i ] > learner.current_genome_tracking[ i + 1 ] ) // Following.
-			{
-				
-				fitness += learner_parameters.fitness_credit_for_tracking;
-				
-			}				
-			else if ( learner.current_genome_tracking[ i ] < learner.current_genome_tracking[ i + 1 ] ) // Going away from.
-			{
-				
-				fitness -= learner_parameters.fitness_credit_for_tracking;
-				
-			}
-			else if ( learner.current_genome_tracking[ i ] == learner.current_genome_tracking[ i + 1 ] ) // Staying put.
-			{
-				
-				fitness += 0;
-				
-			}
-			
-			i += 2;
-			
-		}
-		while ( j-- )
-	}		
-	else // Odd.
-	{
-		
-		j = ( learner.current_genome_tracking.length - 1 ) / 2; // Minus one to make it even.
-		
-		// Go through tracking points and compare in pairs.
-		// (0<=>1), (2<=>3), ..., (n-2<=>n-1)
-		
-		do
-		{
-			
-			if ( learner.current_genome_tracking[ i ] == 0.0 && learner.current_genome_tracking[ i + 1 ] == 0.0 ) // On target.
-			{
-				
-				fitness += learner_parameters.fitness_credit_for_tracking;
-				
-			}
-			else if ( learner.current_genome_tracking[ i ] > learner.current_genome_tracking[ i + 1 ] ) // Going toward.
-			{
-				
-				fitness += learner_parameters.fitness_credit_for_tracking;
-				
-			}				
-			else if ( learner.current_genome_tracking[ i ] < learner.current_genome_tracking[ i + 1 ] ) // Going away.
-			{
-				
-				fitness -= learner_parameters.fitness_credit_for_tracking;
-				
-			}
-			else if ( learner.current_genome_tracking[ i ] == learner.current_genome_tracking[ i + 1 ] ) // Didn't move at all.
-			{
-				
-				fitness += 0;
-				
-			}
-			
-			i += 2;
-			
-		}
-		while ( j-- )
-			
-	}
-	
-	learner.current_genome_tracking = [ ];
 
-	*/
-	
-	pause = true;
-	
-	var i = 0;
-	var j = 0;
-	var k = 0;
-	
-	if ( learner.neural_network_round % 5 != 0 )
-	{
-		
+		learner.tournament_players[ learner.current_player ].ball_in_play_times.push( ( learner.ball_in_play_end_time - learner.ball_in_play_start_time ) / 1000 );
 
-		learner.evalutation_times.push( ( learner.evaluation_end_time - learner.evaluation_start_time ) / 1000 );
-		
 		learner.neural_network_round += 1;
-		
-		learner.evaluation_start_time = new Date( ).getTime( );
-		
-		learner.evaluation_end_time   = 0;	
-		
-		
-	}
-	else 
+
+	}	
+	
+	if (  learner.tournament_players[ learner.current_player ].ball_in_play_times.length == learner_parameters.number_of_rounds_per_player )
 	{
 		
-		var time_average = get_average( learner.evalutation_times );
+		var time_average = get_average( learner.tournament_players[ learner.current_player ].ball_in_play_times );
 		
-		learner.evaluation_time_averages.push( time_average );
+		learner.tournament_players[ learner.current_player ].average_ball_in_play_time = time_average;
 		
-		learner.evalutation_times = [ ];
+		var data_string  = "action=tournament_results";
+		data_string     += "&generation_number="         + learner.tournament_players[ learner.current_player ].generation_number;
+		data_string     += "&fitness="                   + learner.tournament_players[ learner.current_player ].fitness;
+		data_string     += "&crossover_probability="     + learner.tournament_players[ learner.current_player ].crossover_probability;
+		data_string     += "&mutation_probability="      + learner.tournament_players[ learner.current_player ].mutation_probability;
+		data_string     += "&average_ball_in_play_time=" + learner.tournament_players[ learner.current_player ].average_ball_in_play_time;		
+
+		database_manager.send_and_receive( "assets/scripts/experiment.php", data_string, database_manager, "tournament_results" );
 		
-		learner.evaluation_start_time = new Date( ).getTime( );
+		if ( ( learner.current_player + 1 ) % learner.parameters.number_of_players == 0 ) 
+		{ 
+			
+			stop_tournament = true; 
+			
+			return; 
+			
+		}
 		
-		learner.evaluation_end_time   = 0;
+		learner.current_player += 1;
 		
-		if ( ( learner.current_neural_net_in_evalutation + 1 ) % 10 == 0 ) { console.log( learner.evaluation_time_averages ); stop_tournament = true; return; }
+		learner.neural_net.put_weights( learner.tournament_players[ learner.current_player ].genes );		
 		
-		learner.current_neural_net_in_evalutation += 1;
-		
-		learner.neural_net.put_weights( learner.neural_network_weights[ learner.current_neural_net_in_evalutation ] );		
-		
-		learner.neural_network_round = 1;
+		learner.neural_network_round = 0;
 		
 	}		
 	
 	learner.evaluate_current_neural_network = false;
 	
 	reset( );
+	
+	learner.ball_in_play_start_time = new Date( ).getTime( );
+		
+	learner.ball_in_play_end_time   = 0;
 	
 }
 
@@ -655,10 +573,10 @@ function collision_handler( colliding_objects )
 			if ( ball.get_magnitude( ) == 0 )
 			{
 				
-				if ( learner.evaluation_start_time != 0 )
+				if ( learner.ball_in_play_start_time != 0 )
 				{
 					
-					learner.evaluation_end_time = new Date( ).getTime( );
+					learner.ball_in_play_end_time = new Date( ).getTime( );
 					
 				}
 				
@@ -737,10 +655,10 @@ function collision_handler( colliding_objects )
 			if ( ball.get_magnitude( ) == 0 )
 			{
 				
-				if ( learner.evaluation_start_time != 0 )
+				if ( learner.ball_in_play_start_time != 0 )
 				{
 					
-					learner.evaluation_end_time = new Date( ).getTime( );
+					learner.ball_in_play_end_time = new Date( ).getTime( );
 					
 				}
 				
@@ -774,10 +692,10 @@ function collision_handler( colliding_objects )
 			if ( ball.get_magnitude( ) == 0 )
 			{
 				
-				if ( learner.evaluation_start_time != 0 )
+				if ( learner.ball_in_play_start_time != 0 )
 				{
 					
-					learner.evaluation_end_time = new Date( ).getTime( );
+					learner.ball_in_play_end_time = new Date( ).getTime( );
 					
 				}
 				
@@ -799,10 +717,10 @@ function collision_handler( colliding_objects )
 			if ( ball.get_magnitude( ) == 0 )
 			{
 				
-				if ( learner.evaluation_start_time != 0 )
+				if ( learner.ball_in_play_start_time != 0 )
 				{
 					
-					learner.evaluation_end_time = new Date( ).getTime( );
+					learner.ball_in_play_end_time = new Date( ).getTime( );
 					
 				}
 				
@@ -821,10 +739,10 @@ function collision_handler( colliding_objects )
 			
 			ball.set_magnitude( ( ball.get_magnitude( ) - ( ball.get_magnitude( ) * ball_magnitude_reduce_by_percentage ) ) > ball_magnitude_reduction_threshold ? ( ball.get_magnitude( ) - ( ball.get_magnitude( ) * .1 ) ) : 0 ); 
 
-			if ( learner.evaluation_start_time != 0 )
+			if ( learner.ball_in_play_start_time != 0 )
 			{
 				
-				learner.evaluation_end_time = new Date( ).getTime( );
+				learner.ball_in_play_end_time = new Date( ).getTime( );
 				
 			}
 			

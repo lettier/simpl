@@ -15,6 +15,10 @@ var take_control = false;
 var pause        = true;
 var show_debug   = false;
 
+var use_perfect_paddle = false;
+
+var run_experiment = false;
+
 var request_animation_id = null;
 
 var top_wall    = new Static_Object( "top_wall"    );
@@ -60,13 +64,14 @@ var neural_net_parameters = {
 
 var genetic_algorithm_parameters = {
 	
-	popSize:             10,
-	nGenesPerGenome:   null,
-	useRankFitness:    true,
-	iCRate:             0.5,
-	iMRate:             0.5,
-	nElite:               2,
-	nEliteCopies:         1
+	popSize:                              10,
+	nGenesPerGenome:                    null,
+	useRankFitness:                     true,
+	useSelfAdaptation:                  true,
+	pCrMuSeq:                          false,
+	iCProb:                              0.0,
+	iMProb:                              0.0,
+	nElite:                                2
 	
 };
 
@@ -109,13 +114,27 @@ database_manager.send_and_receive( "assets/scripts/retrieve_genomes.php", last_g
 
 var last_generation = database_manager.responses[ "last_generation" ];
 
-if ( last_generation != ";" )
+if ( last_generation.charAt( 0 ) != ";" )
 {
 	
 	if ( window.confirm( "Start from previous generation?" ) )
 	{
 
-		var population_genes = last_generation.split( ";" )[ 1 ];
+		// String received from server is generation_number;crossover_probability;mutation_probability;population_genes.
+		
+		var generation_number = parseInt( last_generation.split( ";" )[ 0 ] );
+		
+		learner.genetic_algorithm.set_generation_number( generation_number );
+		
+		var crossover_probability = parseFloat( last_generation.split( ";" )[ 1 ] );
+		
+		learner.genetic_algorithm.set_crossover_probability( crossover_probability);
+		
+		var mutation_probability  = parseFloat( last_generation.split( ";" )[ 2 ] );
+		
+		learner.genetic_algorithm.set_mutation_probability( mutation_probability );
+		
+		var population_genes  = last_generation.split( ";" )[ 3 ];
 		
 		population_genes = population_genes.split( "," );
 		
@@ -128,9 +147,7 @@ if ( last_generation != ";" )
 		
 		learner.genetic_algorithm.replace_population_genes( population_genes );
 		
-		var generation_number = parseInt( last_generation.split( ";" )[ 0 ] );
-		
-		learner.genetic_algorithm.set_generation_number( generation_number );
+		// Set neural network weights to the first genome's genes.
 		
 		learner.neural_net.put_weights( learner.genetic_algorithm.get_genome_genes( learner.current_genome_being_evalutated ) );
 		
@@ -501,40 +518,68 @@ function handle_neural_network_ouput( )
 	debug_manager.add_or_update( "NN Input", paddle_offset_from_ball.x.toFixed( 3 ) + " " + paddle_offset_from_ball.y.toFixed( 3 ) + " " + ball_velocity.x.toFixed( 3 ) + " " + ball_velocity.y.toFixed( 3 ) + " " + paddle_offset_from_screen_origin.x.toFixed( 3 ) + " " + paddle_offset_from_screen_origin.y.toFixed( 3 ) );
 
 	debug_manager.add_or_update( "NN Output", learner.neural_net_output );
-
-	if ( learner.neural_net_output[ 0 ] < 0.0 )
+	
+	if ( !use_perfect_paddle )
+	{	
+	
+		if ( learner.neural_net_output[ 0 ] < 0.0 )
+		{
+			
+			// Output indicates that we must go down the screen
+			// by some magnitude in the range (0,MAG_MAX].
+			
+			// Don't set a negative magnitude so multiply the output by -1 to
+			// make it positive and multiply this result by the starting paddle
+			// magnitude.
+			
+			paddle.set_magnitude( starting_paddle_magnitude * ( -1 * learner.neural_net_output[ 0 ] ) );
+			
+			paddle.set_angle( 270 );
+			
+		}
+		else if ( learner.neural_net_output[ 0 ] == 0.0 )
+		{
+			
+			// Don't move.
+			
+			paddle.set_magnitude( 0 );
+			
+			paddle.set_angle( starting_paddle_angle );
+			
+		}
+		else if ( learner.neural_net_output[ 0 ] > 0.0 )
+		{
+			
+			// Go up by some portion of the starting paddle magnitude.
+			
+			paddle.set_magnitude( starting_paddle_magnitude * learner.neural_net_output[ 0 ] );
+			
+			paddle.set_angle( 90.0 );
+			
+		}
+		
+	}	
+	else if ( use_perfect_paddle )
 	{
 		
-		// Output indicates that we must go down the screen
-		// by some magnitude in the range (0,MAG_MAX].
+		var difference = paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y;
 		
-		// Don't set a negative magnitude so multiply the output by -1 to
-		// make it positive and multiply this result by the starting paddle
-		// magnitude.
-		
-		paddle.set_magnitude( starting_paddle_magnitude * ( -1 * learner.neural_net_output[ 0 ] ) );
-		
-		paddle.set_angle( 270 );
-		
-	}
-	else if ( learner.neural_net_output[ 0 ] == 0.0 )
-	{
-		
-		// Don't move.
-		
-		paddle.set_magnitude( 0 );
-		
-		paddle.set_angle( starting_paddle_angle );
-		
-	}
-	else if ( learner.neural_net_output[ 0 ] > 0.0 )
-	{
-		
-		// Go up by some portion of the starting paddle magnitude.
-		
-		paddle.set_magnitude( starting_paddle_magnitude * learner.neural_net_output[ 0 ] );
-		
-		paddle.set_angle( 90.0 );
+		if ( difference < 0 )
+		{
+			
+			paddle.set_magnitude( -1 * difference * 10 );
+			
+			paddle.set_angle( 270 );
+			
+		}			
+		else if ( difference >= 0 )
+		{
+			
+			paddle.set_magnitude( difference * 10  );
+			
+			paddle.set_angle( 90.0 );
+			
+		}
 		
 	}
 	
@@ -567,13 +612,18 @@ function handle_genome_evaluation( )
 
 		// Evaluated all the genomes in the population.
 		// Calculate population metrics.
-		// Adjust crossover rate and mutation rate.		
+		// Adjust crossover and mutation probabilities if using self-adaptation.		
 		
 		learner.genetic_algorithm.sort_population( );
 		
 		learner.genetic_algorithm.evaluate_population( );
 		
-		learner.genetic_algorithm.adjust_crossover_and_mutation_rate( );
+		if ( learner.parameters.genetic_algorithm.useSelfAdaptation )
+		{
+			
+			learner.genetic_algorithm.adjust_crossover_and_mutation_probabilities( );
+			
+		}
 		
 		// Package up this population and send it to the database if its generation number is higher than
 		// the highest generation number already in the database.
@@ -582,34 +632,41 @@ function handle_genome_evaluation( )
 		data_string     += "&average_fitness="            + learner.genetic_algorithm.get_average_fitness( );
 		data_string     += "&population_size="            + learner.genetic_algorithm.get_population_size( );
 		data_string     += "&number_of_genes_per_genome=" + learner.genetic_algorithm.get_number_of_genes_per_genome( );
+		data_string     += "&crossover_probability="      + learner.genetic_algorithm.get_crossover_probability( );
+		data_string     += "&mutation_probability="       + learner.genetic_algorithm.get_mutation_probability( );
 		data_string     += "&population_genes="           + learner.genetic_algorithm.get_population_genes_flattened( );
 		
 		database_manager.send_and_receive( "assets/scripts/store_genomes.php", data_string, database_manager, "adding_genome_population" );
 		
-		// Experiment of first 100 generations.
-
-		if ( learner.genetic_algorithm.get_generation_number( ) < 100 )
-		{
+		if ( run_experiment )
+		{	
 		
-			var experiment_record_data_string  = "action=record";
-			experiment_record_data_string     += "&generation_number=" + learner.genetic_algorithm.get_generation_number( );
-			experiment_record_data_string     += "&average_fitness="   + learner.genetic_algorithm.get_average_fitness( );
-			experiment_record_data_string     += "&crossover_rate="    + learner.genetic_algorithm.get_crossover_rate( );
-			experiment_record_data_string     += "&mutation_rate="     + learner.genetic_algorithm.get_mutation_rate( );			
-			
-			database_manager.send_and_receive( "assets/scripts/experiment.php", experiment_record_data_string, database_manager, "experiment_record" );
-			
-			if ( ( learner.genetic_algorithm.get_generation_number( ) + 1 ) % 10 == 0 )
+			// Experiment of first 100 generations.
+
+			if ( learner.genetic_algorithm.get_generation_number( ) < 100 )
 			{
 			
-				var experiment_store_data_string  = "action=store";
-				experiment_store_data_string     += "&generation_number=" + learner.genetic_algorithm.get_generation_number( );
-				experiment_store_data_string     += "&fitness="           + learner.genetic_algorithm.get_genome_fitness( learner.genetic_algorithm.get_fittest_genome_index( ) ); 
-				experiment_store_data_string     += "&crossover_rate="    + learner.genetic_algorithm.get_crossover_rate( ); 
-				experiment_store_data_string     += "&mutation_rate="     + learner.genetic_algorithm.get_mutation_rate( ); 
-				experiment_store_data_string     += "&genes="             + learner.genetic_algorithm.get_genome_genes_flattened( learner.genetic_algorithm.get_fittest_genome_index( ) ); 
-			
-				database_manager.send_and_receive( "assets/scripts/experiment.php", experiment_store_data_string, database_manager, "experiment_store" );
+				var experiment_record_data_string  = "action=record";
+				experiment_record_data_string     += "&generation_number="        + learner.genetic_algorithm.get_generation_number( );
+				experiment_record_data_string     += "&average_fitness="          + learner.genetic_algorithm.get_average_fitness( );
+				experiment_record_data_string     += "&crossover_probability="    + learner.genetic_algorithm.get_crossover_probability( );
+				experiment_record_data_string     += "&mutation_probability="     + learner.genetic_algorithm.get_mutation_probability( );			
+				
+				database_manager.send_and_receive( "assets/scripts/experiment.php", experiment_record_data_string, database_manager, "experiment_record" );
+				
+				if ( ( learner.genetic_algorithm.get_generation_number( ) + 1 ) % 10 == 0 )
+				{
+				
+					var experiment_store_data_string  = "action=store";
+					experiment_store_data_string     += "&generation_number="        + learner.genetic_algorithm.get_generation_number( );
+					experiment_store_data_string     += "&fitness="                  + learner.genetic_algorithm.get_genome_fitness( learner.genetic_algorithm.get_fittest_genome_index( ) ); 
+					experiment_store_data_string     += "&crossover_probability="    + learner.genetic_algorithm.get_crossover_probability( ); 
+					experiment_store_data_string     += "&mutation_probability="     + learner.genetic_algorithm.get_mutation_probability( ); 
+					experiment_store_data_string     += "&genes="                    + learner.genetic_algorithm.get_genome_genes_flattened( learner.genetic_algorithm.get_fittest_genome_index( ) ); 
+				
+					database_manager.send_and_receive( "assets/scripts/experiment.php", experiment_store_data_string, database_manager, "experiment_store" );
+					
+				}
 				
 			}
 			
