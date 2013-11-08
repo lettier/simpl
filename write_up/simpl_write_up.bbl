@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{predictive_models}
+Heinz M\"{u}hlenbein and Dirk Schlierkamp-Voosen.
+\newblock Predictive models for the breeder genetic algorithm i. continuous
+  parameter optimization.
+\newblock {\em Evol. Comput.}, 1(1):25--49, March 1993.
+
+\bibitem{self_adapt}
+Wen-Yung~Lee Wen-Yang~Lin and Tzung-Pei Hong.
+\newblock Adapting crossover and mutation rates in genetic algorithms.
+\newblock {\em Journal of Information Science and Engineering}, 19:889--903,
+  2003.
+
+\end{thebibliography}
