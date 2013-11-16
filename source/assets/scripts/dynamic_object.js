@@ -113,16 +113,51 @@ function Dynamic_Object( id )
 		
 		return this.center;
 		
+	}	
+	
+	this.get_distance_to = function ( object )
+	{
+		
+		if ( object == undefined ) { console.log( "[Dynamic_Object:distance_to] Object not set." ); return { x: 0, y: 0, h: 1 }; }
+		
+		if ( object.hasOwnProperty( "get_center" ) ) 
+		{ 
+			var math_abs = Math.abs;
+			
+			var x = math_abs( this.get_center( ).x - object.get_center( ).x );
+			
+			var y = math_abs( this.get_center( ).y - object.get_center( ).y );
+			
+			var h = Math.sqrt( ( x * x ) + ( y * y ) );
+			
+			return { x: x, y: y, h: h };
+			
+		}
+		else
+		{
+			
+			var math_abs = Math.abs;
+			
+			var x = math_abs( this.get_center( ).x - object.x );
+			
+			var y = math_abs( this.get_center( ).y - object.y );
+			
+			var h = Math.sqrt( ( x * x ) + ( y * y ) );
+			
+			return { x: x, y: y, h: h };
+			
+		}
+		
 	}
 	
 	this.set_center = function ( x, y )
 	{
 		
-		if ( x == undefined || y == undefined ) { console.log( "[Dynamic_Object:set_center] X and/or y is not set." ); return null; }
+		if ( x == undefined || y == undefined ) { console.log( "[Dynamic_Object:set_center] x and/or y is not set." ); return null; }
 		
-		this.object.style.left = x + "px";
+		this.object.style.left = ( x - ( this.get_width( ) / 2 ) ) + "px";
 		
-		this.object.style.top  = y + "px";	
+		this.object.style.top  = ( y - ( this.get_height( ) / 2 ) ) + "px";	
 		
 		this.get_top( );
 		
@@ -172,7 +207,7 @@ function Dynamic_Object( id )
 		
 		this.object.style.left = this.object.offsetLeft + dx + "px";
 		
-		this.object.style.top = this.object.offsetTop   + dy + "px";	
+		this.object.style.top  = this.object.offsetTop  + dy + "px";	
 		
 		this.get_top( );
 		
@@ -215,41 +250,6 @@ function Dynamic_Object( id )
 			
 		}
 		
-	}
-	
-	this.get_distance_to = function ( object )
-	{
-		
-		if ( object == undefined ) { console.log( "[Dynamic_Object:distance_to] Object not set." ); return { x: 0, y: 0, h: 1 }; }
-		
-		if ( object.hasOwnProperty( "get_center" ) ) 
-		{ 
-			var math_abs = Math.abs;
-			
-			var x = math_abs( this.get_center( ).x - object.get_center( ).x );
-			
-			var y = math_abs( this.get_center( ).y - object.get_center( ).y );
-			
-			var h = Math.sqrt( ( x * x ) + ( y * y ) );
-			
-			return { x: x, y: y, h: h };
-			
-		}
-		else
-		{
-			
-			var math_abs = Math.abs;
-			
-			var x = math_abs( this.get_center( ).x - object.x );
-			
-			var y = math_abs( this.get_center( ).y - object.y );
-			
-			var h = Math.sqrt( ( x * x ) + ( y * y ) );
-			
-			return { x: x, y: y, h: h };
-			
-		}
-		
-	}
+	}	
 	
 }

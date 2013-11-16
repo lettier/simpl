@@ -10,24 +10,33 @@
  * 
  */
 
+var request_animation_id = null;
 
 var take_control = false;
 var pause        = true;
 var show_debug   = false;
 
-var use_perfect_paddle = false;
+var use_neural_network_paddle = false;
+var use_perfect_paddle        = true;
+var use_random_paddle         = false;
 
-var run_experiment = false;
-
-var request_animation_id = null;
+var run_experiment = true;
 
 var top_wall    = new Static_Object( "top_wall"    );
 var right_wall  = new Static_Object( "right_wall"  );
 var bottom_wall = new Static_Object( "bottom_wall" );
 var left_wall   = new Static_Object( "left_wall"   );
 
-var paddle_path = document.getElementById( "paddle_path" );
+
+var ball_slot   = document.getElementById( "ball_slot" );
 var paddle_slot = document.getElementById( "paddle_slot" );
+
+var ball_reset_center   = { x: ball_slot.offsetLeft   + ( ( ball_slot.offsetWidth    || ball_slot.clientWidth    ) / 2 ),
+	                       y: ball_slot.offsetTop    + ( ( ball_slot.offsetHeight   || ball_slot.clientHeight   ) / 2 )  };
+var paddle_reset_center = { x: paddle_slot.offsetLeft + ( ( paddle_slot.offsetWidth  || paddle_slot.clientWidth  ) / 2 ),
+	                       y: paddle_slot.offsetTop  + ( ( paddle_slot.offsetHeight || paddle_slot.clientHeight ) / 2 )  };
+
+var paddle_path = document.getElementById( "paddle_path" );
 var ball_in_paddle_path_color     = "rgba( 200, 255, 136, .2 )";
 var ball_not_in_paddle_path_color = "rgba( 255,  98,  98, .2 )";
 var padddle_path_background_color = ball_in_paddle_path_color;
@@ -35,10 +44,10 @@ var padddle_path_background_color = ball_in_paddle_path_color;
 var random_angle_range = { min: 135, max: 225 };
 var random_angle = random_angle_range.min + ( random_angle_range.max - random_angle_range.min ) * Math.random( );
 
-var starting_magnitude        = 1000;
+var starting_magnitude        = 1000.0;
 var starting_ball_magnitude   = starting_magnitude;
 var starting_paddle_magnitude = starting_magnitude;
-var starting_paddle_angle = 90;
+var starting_paddle_angle = 90.0;
 
 var ball   = new Physics_Object(  new Dynamic_Object( "ball" ), random_angle, starting_ball_magnitude   );
 
@@ -71,7 +80,7 @@ var genetic_algorithm_parameters = {
 	pCrMuSeq:                          false,
 	iCProb:                              0.0,
 	iMProb:                              0.0,
-	nElite:                                2
+	nElite:                               10
 	
 };
 
@@ -301,17 +310,17 @@ draw( );
 function reset( )
 {
 	
-	random_angle = random_angle_range.min + ( random_angle_range.max - random_angle_range.min ) * Math.random( );	
-	ball.dynamic_object.set_center( document.getElementById( "ball_slot" ).offsetLeft, document.getElementById( "ball_slot" ).offsetTop );
+	random_angle = random_angle_range.min + ( random_angle_range.max - random_angle_range.min ) * Math.random( );
+	ball.dynamic_object.set_center( ball_reset_center.x, ball_reset_center.y );
 	ball.set_magnitude( starting_ball_magnitude );
-	ball.set_angle( random_angle );
-	
-	paddle.dynamic_object.set_center( paddle_slot.offsetLeft, paddle_slot.offsetTop );
+	ball.set_angle( random_angle );	
+		
+	paddle.dynamic_object.set_center( paddle_reset_center.x, paddle_reset_center.y );
 	paddle.set_magnitude( starting_ball_magnitude );
 	paddle.set_angle( starting_paddle_angle );
 
 	take_control = false;	
-	pause = false;
+	pause        = false;
 	
 }
 
@@ -519,7 +528,7 @@ function handle_neural_network_ouput( )
 
 	debug_manager.add_or_update( "NN Output", learner.neural_net_output );
 	
-	if ( !use_perfect_paddle )
+	if ( use_neural_network_paddle )
 	{	
 	
 		if ( learner.neural_net_output[ 0 ] < 0.0 )
@@ -542,7 +551,7 @@ function handle_neural_network_ouput( )
 			
 			// Don't move.
 			
-			paddle.set_magnitude( 0 );
+			paddle.set_magnitude( 0.0 );
 			
 			paddle.set_angle( starting_paddle_angle );
 			
@@ -562,23 +571,80 @@ function handle_neural_network_ouput( )
 	else if ( use_perfect_paddle )
 	{
 		
+		/*
+		
 		var difference = paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y;
+		
+		debug_manager.add_or_update( "Perfect Output", difference );
 		
 		if ( difference < 0 )
 		{
 			
-			paddle.set_magnitude( -1 * difference * 10 );
+			paddle.set_magnitude( 10.0 * ( -1 * difference ) );
 			
 			paddle.set_angle( 270 );
 			
-		}			
-		else if ( difference >= 0 )
+		}
+		else if ( difference == 0.0 )
 		{
 			
-			paddle.set_magnitude( difference * 10  );
+			paddle.set_magnitude( 0.0 );
+			
+			paddle.set_angle( starting_paddle_angle );
+			
+		}			
+		else if ( difference > 0 )
+		{
+			
+			paddle.set_magnitude( 10.0 * difference );
 			
 			paddle.set_angle( 90.0 );
 			
+		}
+		
+		*/
+		
+		paddle.set_magnitude( 0.0 );
+			
+		paddle.set_angle( starting_paddle_angle );
+		
+		var ball_center   = ball.dynamic_object.get_center( );
+		
+		var paddle_center = paddle.dynamic_object.get_center( );
+		
+		paddle.dynamic_object.set_center( paddle_center.x, ball_center.y );
+		
+	}
+	else if ( use_random_paddle )
+	{
+		
+		var random_float = get_random_float( -1, 1 );
+		
+		debug_manager.add_or_update( "Random Output", random_float );
+		
+		if ( random_float < 0.0 )
+		{
+		     
+			paddle.set_magnitude( starting_paddle_magnitude * ( -1 * random_float ) );
+       	
+			paddle.set_angle( 270.0 );			
+		  
+		}
+		else if ( random_float == 0.0 )
+		{
+			
+			paddle.set_magnitude( 0.0 );
+       	
+			paddle.set_angle( starting_paddle_angle );
+			
+		}
+		else if ( random_float > 0.0 )
+		{
+		     
+			paddle.set_magnitude( starting_paddle_magnitude * random_float );
+       	
+			paddle.set_angle( 90.0 );
+       
 		}
 		
 	}
@@ -629,7 +695,9 @@ function handle_genome_evaluation( )
 		// the highest generation number already in the database.
 		
 		var data_string  = "generation_number="           + learner.genetic_algorithm.get_generation_number( );
+		data_string     += "&best_fitness="               + learner.genetic_algorithm.get_best_fitness( );
 		data_string     += "&average_fitness="            + learner.genetic_algorithm.get_average_fitness( );
+		data_string     += "&worst_fitness="              + learner.genetic_algorithm.get_worst_fitness( );
 		data_string     += "&population_size="            + learner.genetic_algorithm.get_population_size( );
 		data_string     += "&number_of_genes_per_genome=" + learner.genetic_algorithm.get_number_of_genes_per_genome( );
 		data_string     += "&crossover_probability="      + learner.genetic_algorithm.get_crossover_probability( );
@@ -648,7 +716,9 @@ function handle_genome_evaluation( )
 			
 				var experiment_record_data_string  = "action=record";
 				experiment_record_data_string     += "&generation_number="        + learner.genetic_algorithm.get_generation_number( );
+				experiment_record_data_string     += "&best_fitness="             + learner.genetic_algorithm.get_best_fitness( );
 				experiment_record_data_string     += "&average_fitness="          + learner.genetic_algorithm.get_average_fitness( );
+				experiment_record_data_string     += "&worst_fitness="            + learner.genetic_algorithm.get_worst_fitness( );
 				experiment_record_data_string     += "&crossover_probability="    + learner.genetic_algorithm.get_crossover_probability( );
 				experiment_record_data_string     += "&mutation_probability="     + learner.genetic_algorithm.get_mutation_probability( );			
 				

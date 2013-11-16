@@ -13,6 +13,16 @@
 
 \usepackage{colortbl}
 
+\usepackage[table]{xcolor}
+
+\makeatletter
+\newcommand{\thickhline}{%
+    \noalign {\ifnum 0=`}\fi \hrule height 1pt
+    \futurelet \reserved@a \@xhline
+}
+\newcolumntype{"}{@{\hskip\tabcolsep\vrule width 1pt\hskip\tabcolsep}}
+\makeatother
+
 \title{SimPL \\ Simple Pong Learner}
 \author{David Lettier}
 \date{\today}
@@ -85,17 +95,17 @@ The paddle is a physics based dynamic object that has a fixed velocity angle of 
   \label{fig:paddle}
 \end{figure}
 
-The paddle's direction and speed is regulated by the output of the neural network. The output of the neural network is in the range $[-1,1]$. A neural network output of $0$ results in the paddle not moving from its current position. A neural network output in the range of $(0,1]$ results in the paddle traveling up by some percentage of its starting velocity magnitude. A neural network output in the range of $[-1,0)$ results in the paddle traveling down by some percentage of it its starting velocity magnitude. For example, say the neural network output is $0.68$. The paddle's velocity angle would be set to $90^\circ$ and its velocity magnitude would be set to $m_{new}=0.68*m_{initial}$.
+The paddle's direction and speed are regulated by the output of the neural network. The output of the neural network is in the range $[-1,1]$. A neural network output of $0$ results in the paddle not moving from its current position. A neural network output in the range of $(0,1]$ results in the paddle traveling up by some percentage of its starting velocity magnitude. A neural network output in the range of $[-1,0)$ results in the paddle traveling down by some percentage of its starting velocity magnitude. For example, say the neural network output is $0.68$ and let $m$ denote the paddle's velocity magnitude. The paddle's velocity angle would be set to $90^\circ$ and its velocity magnitude would be set to $m_{new}=0.68*m_{initial}$ where $m_{initial}$ is the paddle's starting velocity magnitude (specifically $1000 \ \frac{pixels}{second}$). Here the paddle can always travel as fast or faster than the ball given that the starting velocity magnitude of the paddle and ball are the same at the start of every round. However, while ball's velocity magnitude is reduced after every collision the ball makes, the paddle has the possibility of always traveling as fast as it could at the start of the round (albeit depending on the neural-network output). Thus, it is never the case that the paddle does not have the possibility of never reaching the ball in time during the duration of any round. In other words, it is never the case that the neural-network classifies the correct movement---given the paddle's and ball's states---but the paddle misses out on fitness it could have gained had it been traveling fast enough to reach the ball. The paddle can always reach the ball given the neural network output is correct given the paddle's and ball's states. Thus, at any time $t$ during any round $R_i$, the paddle's velocity magnitude is $0\leq m \leq 1000 \ \frac{pixels}{second}$ as $m = \left|[-1,1]\right| * m_{initial}$ where $\left|[-1,1]\right|$ is the absolute value of the neural-network's output range.    
 
-Collisions can occur for the paddle between the top wall, the bottom ball, and the ball. Collision with either the top or bottom wall results in the paddle's top or bottom being placed just before the wall. Collision with the ball results in no change of movement for the paddle---the paddle merely continues moving as it was before the collision occurred with the ball.
+Collisions can occur for the paddle between the top wall, the bottom wall, and the ball. Collision with either the top or bottom wall results in the paddle's top or bottom being placed just before the wall. Collision with the ball results in no change of movement for the paddle---the paddle merely continues moving as it was before the collision occurred with the ball.
 
 \subsection{Physics Engine}
 
-All dynamic and static objects are registered with the physics engine before the first round. Once every draw loop of the simulation, the physics engine tests for collisions between dynamic objects and other dynamic objects and between dynamic objects and static objects. Those dynamic objects that are found to be colliding with either another dynamic object and/or static object are flagged as such and their collisions are handled accordingly. For those dynamic objects that are not colliding, their position is updated based on their velocity.
+All dynamic and static objects are registered with the physics engine before the first round. Once every draw loop of the simulation, the physics engine tests for collisions between dynamic objects and other dynamic objects and between dynamic objects and static objects. Those dynamic objects that are found to be colliding with either another dynamic object and/or static object are flagged as such and their collisions are handled accordingly. For those dynamic objects that are not colliding, their positions are updated based on their velocity.
 
 \subsection{Neural Network}
 
-The neural network is a feed-forward neural network that contains one input layer consisting of six input nodes, one hidden layer consisting of 5 hidden nodes, and one output layer consisting of one output node. Each threshold input to the hidden nodes and the output node is included among the weights of the network and thus are optimized or tuned via the genetic algorithm. All total, there are 41 weights ($(6+1)*5+(5+1)*1=41$) contained in the network. See Figure \ref{fig:nn}. Thus, there are 41 genes per genome in the genetic algorithm's population. All output from the hidden nodes and the output node are run through a sigmoid, hyperbolic-tangent-activation function $\left ( tanh(x)=\frac{e^{2x}-1}{e^{2x}+1} \right )$ resulting in an output range of $[-1,1]$.
+The neural network is a feed-forward neural network that contains one input layer consisting of six input nodes, one hidden layer consisting of 5 hidden nodes, and one output layer consisting of one output node. Each threshold input to the hidden nodes and the output node is included among the weights of the network and thus are optimized or tuned via the genetic algorithm. In total, there are 41 weights ($(6+1)*5+(5+1)*1=41$) contained in the network. See Figure \ref{fig:nn}. Thus, there are 41 genes per genome in the genetic algorithm's population. All output from the hidden nodes and the output node are run through a sigmoid, hyperbolic-tangent-activation function $\left ( tanh(x)=\frac{e^{2x}-1}{e^{2x}+1} \right )$ resulting in an output range of $[-1,1]$.
 
 \begin{figure}[H]  
   \centering
@@ -115,7 +125,7 @@ Input to the neural network is normalized generating three unit vectors: from th
 
 \begin{figure}[H]  
   \centering
-  \includegraphics[width=1\textwidth]{figures/nn_input.png}
+  \includegraphics[width=.9\textwidth]{figures/nn_input.png}
   \caption{Here you see the normalized input to the neural network.}
   \label{fig:nn_input}
 \end{figure}
@@ -126,9 +136,9 @@ Input to the neural network is normalized generating three unit vectors: from th
 
 Instead of using back-propagation to train the weights of the neural network, a genetic algorithm is used to optimize or rather tune the weights of the neural network. The genetic algorithm consists of a population of genomes with each having a fitness property and an array of genes. For SimPL, the genes represent a solution of weights to be used in the neural network. Each genome is fitness evaluated by a fitness function. As the genomes evolve over generations to produce fitter genomes, the neural network becomes increasingly accurate at classifying what the paddle should do (move up, stay still, or move down) based on the state of the ball and the paddle. 
 
-The genetic algorithm contains four operators that work to produce fitter generations during the creation of a new population. The operators include: the elitism operator, the selection operator, the crossover operator, and the mutation operator. Initially, the genetic algorithm creates a population of genomes. These initial genomes have zero fitness and a fix number of genes. Each gene in every genome is given a random value sampled from a uniform distribution coinciding with some valid range. The genes are the input parameters to whatever mechanism the genetic algorithm is working to optimize. In the case of SimPL, the mechanism is the neural network and the genes or parameters---of each genome---represent the 41 weights of the neural network. Each gene/parameter/weight has a valid range of $[-1,1]$. 
+The genetic algorithm contains four operators that work to produce fitter generations during the creation of a new population. The operators include: the elitism operator, the selection operator, the crossover operator, and the mutation operator. Initially, the genetic algorithm creates a random population of genomes. These initial genomes have zero fitness and a fixed number of genes. Each gene in every genome is given a random value sampled from a uniform distribution coinciding with some valid range. The genes are the input parameters to whatever mechanism the genetic algorithm is working to optimize. In the case of SimPL, the mechanism is the neural network and the genes or parameters---of each genome---represent the 41 weights of the neural network. Each gene/parameter/weight has a valid range of $[-1,1]$. 
 
-Once every genome in the population has been evaluated by the fitness function, the genetic algorithm constructs a new population/generation from the now old population/generation. First, the elitism operator selects the $n$ fittest genomes from the old generation. These elite genomes are allowed to survive intact (however their fitnesses are reset to zero) and are placed into the new generation. Second, the genetic algorithm enters into a loop creating new genomes via the crossover operator and the mutation operator until an entirely new generation has been created. This new generation goes on to be evaluated as their predecessors were and the cycle repeats until some termination criteria. See Figure \ref{fig:ga}.
+Once every genome in the population has been evaluated by the fitness function, the genetic algorithm constructs a new population/generation from the now old population/generation. First, the elitism operator selects the $n$ fittest genomes from the old generation. These elite genomes are allowed to survive intact (however their fitnesses are reset to zero) and are placed into the new generation. Second, the genetic algorithm enters into a loop creating new genomes via the crossover operator and the mutation operator until an entirely new generation has been created. This new generation goes on to be evaluated as their predecessors were and the cycle repeats until some termination criteria is met. See Figure \ref{fig:ga}.
 
 \begin{figure}[H]
 \begin{equation*}
@@ -139,15 +149,23 @@ Begin \ GA: & \\
 & While \ not \ terminate: \\
 & \quad\quad Evalute \ population \ P_i. \\
 & \quad\quad Create \ empty \ populutation \ P_{i+1}. \\
-& \quad\quad P_{i+1} \longleftarrow Select \ n \ fittest \ from \ P_i. \\
+& \quad\quad Sort \ P_i \ in \ non\!-\!decreasing \ order \ of \ fitness. \\
+& \quad\quad Select \ n \ fittest \ from \ P_i \ and \ append \ to \ P_{i+1}. \\
 & \quad\quad While \ |P_{i+1}| \ < \  population \ size: \\
-& \quad\quad\quad\quad If \ in \ sequence: \\
-& \quad\quad\quad\quad\quad\quad g_1,g_2 \longleftarrow \ Select \ genomes \ from \ P_i. \\
+& \quad\quad\quad\quad If \ perform \ crossover \ and \ mutation \ in \ sequence: \\
+& \quad\quad\quad\quad\quad\quad g_1,g_2 \longleftarrow \ Select \ two \ genomes \ from \ P_i \ via \ roulette \ selection. \\
+& \quad\quad\quad\quad\quad\quad /\!* \ Generate \ two \ of\! fspring \ via \ crossover. *\!/ \\
 & \quad\quad\quad\quad\quad\quad o_1,o_2 \longleftarrow \ Crossover( g_1, g_2 ). \\
+& \quad\quad\quad\quad\quad\quad /\!* \ Mutate \ crossover's \ of\!fspring \ and \\
+& \quad\quad\quad\quad\quad\quad append \ to \ new \ population. \ *\!/ \\
 & \quad\quad\quad\quad\quad\quad P_{i+1} \longleftarrow \ Mutate( o_1, o_2 ). \\
 & \quad\quad\quad\quad Else: \\
-& \quad\quad\quad\quad\quad\quad g_1,g_2 \longleftarrow \ Select \ genomes \ from \ P_i. \\
+& \quad\quad\quad\quad\quad\quad g_1,g_2 \longleftarrow \ Select \ two \ genomes \ from \ P_i \ via \ roulette \ selection. \\
+& \quad\quad\quad\quad\quad\quad /\!* \ Generate \ two \ of\!fspring \ via \ crossover \\
+& \quad\quad\quad\quad\quad\quad and \ append \ to \ new \ population. \ *\!/  \\
 & \quad\quad\quad\quad\quad\quad P_{i+1} \longleftarrow \ Crossover( g_1, g_2 ). \\
+& \quad\quad\quad\quad\quad\quad /\!* \ Mutate \ the \ two \ selected \ genomes \\
+& \quad\quad\quad\quad\quad\quad and \ append \ to \ new \ population. \ *\!/  \\
 & \quad\quad\quad\quad\quad\quad P_{i+1} \longleftarrow \ Mutate( g_1, g_2 ). \\
 & \quad\quad P_{i} \longleftarrow P_{i+1}\\
 \end{aligned}
@@ -159,11 +177,11 @@ Begin \ GA: & \\
 
 \vspace{3mm}
 
-The selection operator uses roulette selection where the probability of some genome being selected is proportional to their fitness. Roulette selection and roulette selection with rank fitness was experimented with as outlined later. The crossover operator takes two selected genomes to produce offspring where the offspring have some combination of their parents' genes. SimPL uses one-point crossover throughout. The mutation operator takes a selected genome and mutates its genes using various means. These means of mutation where experimented with as outlined later. Crossover and mutation can be carried out in sequence or can be done separately with one operator not interfering the other operator's offspring. This was experimented with as outlined later.
+The selection operator uses roulette selection where the probability of some genome being selected is proportional to their fitness. Roulette selection and roulette selection with rank fitness was experimented with as outlined later. The crossover operator takes two selected genomes to produce offspring where the offspring have some combination of their parents' genes. SimPL uses one-point crossover throughout each experiment. To select the crossover point per crossover operation, the crossover operator samples a random integer from a uniform distribution ($crossoverPoint = X\!\sim\!U(0,n-1)$ where $n$ is the number of genes per genome). The mutation operator takes a selected genome and mutates its genes using various means. If the mutation scope is at the gene level, the mutation operator traverses through the genome's gene array where for each gene, the mutation operator samples a random integer from a uniform distribution ($X\!\sim\!U(0,1)$) and if this random integer $X$ is less than or equal to the mutation probability, the mutation operator mutates the gene value either via uniform mutation ($geneValue_i = X\!\sim\!U(0,1) * \varepsilon$) or Gaussian mutation ($geneValue_i = X\!\sim\!N(\mu,\sigma^2)$). If the mutation scope is at the genome level, the mutation operator samples a random integer from a uniform distribution ($X\sim U(0,1)$) and if this random integer $X$ is less than or equal to the mutation probability, the mutation operator mutates all of the genome's gene values one after the other via either uniform mutation ($geneValue_i = X\!\sim\!U(0,1) * \varepsilon$) or Gaussian mutation ($geneValue_i = X\!\sim\!N(\mu,\sigma^2)$). These means of mutation where experimented with as outlined later. Crossover and mutation can be carried out in sequence or can be done separately with one operator not interfering the other operator's offspring. This was experimented with as outlined later.
 
-Crossover and mutation are not guaranteed to always occur as the genetic algorithm produces new genomes from the old genomes. Rather, crossover and mutation occur based on some probability. Of course if the crossover and mutation probabilities are both set to $1$ then yes they always occur. Before the genetic algorithm is initialized, the crossover and mutation probabilities are set before hand. These probabilities can change over time or can remain static throughout the run of the genetic algorithm. Different static settings and self-adaptation of the probabilities were experimented with as outlined later. 
+Crossover and mutation are not guaranteed to always occur as the genetic algorithm produces new genomes from the old genomes. Rather, crossover and mutation occur based on some probability. Of course if the crossover and mutation probabilities are both set to $1$ then yes they always occur. Before the genetic algorithm is initialized, the crossover and mutation probabilities are set before hand to some value. These initial crossover and mutation probability values can be arbitrary or can be based on some a-priori knowledge of the fitness landscape. The probabilities can change over time or can remain static throughout the run of the genetic algorithm. Different static settings and self-adaptation of the probabilities were experimented with as outlined later. 
 
-The fitness function evaluates each genome in the current population based on some fitness criteria. The fitness criteria coincides with finding the optimum solution to the parameter space of the mechanism the genetic algorithm is producing fitter and fitter genomes/solutions to. For SimPL, the parameter space is the weights to the neural network. Each genome represents a solution or point in the weights/parameter space. An optimal solution in the weights space will make the neural network always give a correct classification as to what movement the paddle must make based on the ball's and the paddle's current state. This of course will result in the paddle always following the ball or in other words, the paddle will never let the ball leave the left side of the screen. Thus the fitness criteria for SimPL could include how much or how well the paddle follows the ball and/or how many times the paddle hits the ball. Different fitness criteria were experimented with as outlined later. 
+The fitness function evaluates each genome in the current population based on some fitness criteria. The fitness criteria coincides with finding the optimum solution to the parameter space of the mechanism the genetic algorithm is producing fitter and fitter genomes/solutions to. For SimPL, the parameter space is the weights of the neural network. Each genome represents a solution or point in the weights/parameter space. An optimal solution in the weights space will make the neural network always give a correct classification as to what movement the paddle must make based on the ball's and the paddle's current states. This of course will result in the paddle always following the ball or in other words, the paddle will never let the ball leave the left side of the screen. Thus the fitness criteria for SimPL could include how much or how well the paddle follows the ball and/or how many times the paddle hits the ball. Different fitness criteria were experimented with as outlined later. 
 
 % GA loop
 % crossover
@@ -178,7 +196,7 @@ The fitness function evaluates each genome in the current population based on so
 
 \subsection{Database Manager}
 
-The database manager interfaces with a remote MySQL server either asynchronously or synchronously. Experiment data is recorded to the MySQL database as the experiment is carried out. Additionally, each generation produced by the genetic algorithm is logged to the database. Upon visiting the SimPL site, the last generation produced can be loaded into the genetic algorithm thereby allowing the simulation to pick up where it left off last.  
+The database manager interfaces with a remote MySQL server either asynchronously or synchronously. Experiment data is recorded in the MySQL database as the experiment is carried out. Additionally, each generation produced by the genetic algorithm is logged to the database. Upon visiting the SimPL site, the last generation produced can be loaded into the genetic algorithm thereby allowing the simulation to pick up where it left off last.  
 
 \section{Platforms}
 
@@ -205,20 +223,55 @@ Google Chrome version number 30.0.1599.114 was used on the laptop. Screen resolu
 
 \section{Experimental Designs}
 
-\subsection{Experiment one: use of a full and partial credit granting fitness function.}
+Each SimPL experimental design (with the exception of experiment 6) was constructed in such a way as to focus on a set of one or more facets to the genetic algorithm. See Table \ref{tab:exps}. With each progressive experiment, the facets not focused on were kept the same from the previous experiment. The goal of the experiments were to create a genetic algorithm that would eventually---with efficiency---produce the optimal set of neural-network weights needed in order to generate a paddle that performs as well as the performance-standard paddle constructed in experiment six. Ultimately, the performance of any paddle in SimPL is how long it keeps the ball-in-play before the termination of any round.       
 
-Experiment one centered around the use of a fitness function that would give full and partial credit based on the behavior of the neural network and thus the paddle. The genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was set aside. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the desktop. The genetic algorithm parameters used are listed in Table \ref{tab:exp1}.
+Experiment one and two revolved around the fitness function, the selection operator, and the static crossover and static mutation properties of the genetic algorithm. Experiment three, four, and five revolved around the self-adaptation of the crossover and mutation probabilities and whether allowing the mutation operator to disrupt the offspring, produced by the crossover operator, degraded the performance of the genetic algorithm. Finally, experiment six revolved around constructing a paddle as an optimal-performance standard by which any other paddle could be measured by.    
 
-When evaluating a genome from the population, if its phenotype (the paddle's observable characteristics) followed the ball it would be given a positive partial fitness credit of $0.1$. If the phenotype managed to collide with the ball, the genome was given a full fitness credit of $1$. However, if the phenotype moved away from the ball it was given negative partial fitness credit of $-0.1$. Lastly, if the phenotype didn't move at all (while the ball moved) it was given $0$ fitness. If the total fitness was less than zero, for any genome evaluated, the total fitness was set to zero. 
-
-To facilitate tracking the paddle's movements in relation to the ball's movements, the absolute difference in heights between the paddle's center and the ball center's were recorded every draw loop into an array. Once the genome was ready to be evaluated, this array of differences was analyzed linearly in pairs, that is, $A[i]$ was compared with $A[i+1]$. If $A[i]>A[i+1]$ this indicated that the paddle's center was moving closer to the ball's center and thus the genome was awarded a positive partial credit fitness. If $A[i]<A[i+1]$ this indicated that the paddle's center was moving away from the ball's center and thus the genome was awarded a negative partial credit fitness. If $A[i]=A[i+1]$ this indicated that the paddle's center was neither moving toward nor away from the ball's center and thus the genome was awarded $0$ fitness. A special case for $A[i]=A[i+1]$ was that if $A[i]=0$ and thus $A[i+1]=0$ as well, the paddle was awarded a positive partial fitness as the paddle's center was dead center with the ball's center and therefore the paddle was directly in the path of the ball which is ultimately the goal---that is, the paddle should always matches its center with the ball's center thereby always preventing the ball from leaving the arena.
-
-The hypothesis for using a full and partial fitness credit schema was that every new generation produced would have genomes that at least performed somewhat better than their predecessors at the optimal behaviors. Those optimal behaviors being following the ball and hitting the ball. Originally, only hitting the ball was going to be the fitness criteria. However, early generations may never hit the ball and thus would have zero fitness. Genomes that at least followed the ball could have been erroneously discarded due to having zero fitness. By giving partial credit for at least following the ball, it was hypothesized that it would seed early generations with promising genomes or rather promising solutions to the parameter space. Picture a classroom of students taking a test. Upon evaluation, it is either all or nothing credit per question and no student finds the solution to any problem. In other words, every student received a zero. This would give the teacher no information as to the quality of the students at least in terms of comparing them to one another. However, if partial credit is given for getting part of the solution correct, then this would give at least some information as to who performed well among the students. In other words, it was hypothesized that by using a finer grained fitness function, there would be some information gained as to the fitness of one genome compared to another (aiding elitism and the selection process) versus no information gained using only a coarsely grained fitness function resulting in every genome having a fitness of zero after being evaluated.
+\renewcommand*\arraystretch{1.5}
 
 \begin{table}[H]
+\hskip-1.7cm
 \footnotesize
-\begin{tabular}{ >{\columncolor[gray]{0.8}} l | l }
+    \begin{tabular}{ | >{\columncolor{lightgray}} r"c|c"c|c|c"c| } \hline
+    \rowcolor{lightgray} \textbf{GA Parameters $\times$ Experiment} & \textit{One} & \textit{Two} & \textit{Three} & \textit{Four} & \textit{Five} & \textit{Six \& Seven}  \\ \thickhline 
+    \textit{Population Size} & 10 & 10 & 10 & 10 & 10 & 10 \\ \hline 
+    \textit{Fitness Function Type} & \cellcolor{blue!25} Partial/Full & \cellcolor{blue!25} Full & Full & Full & Full & Full \\ \hline
+    \textit{Number of Elite Offspring} & 2  & 2 & 2 & 2 & 2 & 10  \\ \hline
+    \textit{Roulette Selection - Actual Fitness} & True & \cellcolor{blue!25} False  & False & False & False & N/A \\ \hline
+    \textit{Roulette Selection - Rank Fitness} & False & \cellcolor{blue!25} True & True & True & True & N/A \\ \hline
+    \textit{Sequential Crossover \& Mutation} & True & True & \cellcolor{blue!25} False & False & \cellcolor{blue!25} True & N/A \\ \hline
+    \textit{Parents Survive} & True & True & \cellcolor{blue!25} False & False & False & N/A \\ \hline
+    \textit{Self-adaptation} & False & False & \cellcolor{blue!25} True & \cellcolor{blue!25} False & False &  N/A \\ \hline
+    \textit{Crossover Type} & One-point & One-point & One-point & One-point & One-point & N/A \\ \hline
+    \textit{Crossover Probability }& 0.7 & \cellcolor{blue!25} 0.8 & \cellcolor{blue!25} 0.5 & \cellcolor{blue!25} 0.7816 & 0.7816  & N/A \\ \hline
+    \textit{Mutation Type} & Uniform & \cellcolor{blue!25} Gaussian & Gaussian & Gaussian & Gaussian &  N/A \\ \hline
+    \textit{Mutation Scope} & Gene & Gene & \cellcolor{blue!25} Genome & Genome & \cellcolor{blue!25} Gene & N/A \\ \hline
+    \textit{Mutation Probability } & 0.1 & \cellcolor{blue!25} $\left(\frac{1}{n}\right)=\left(\frac{1}{41}\right) \approx 0.0244$ & \cellcolor{blue!25} 0.5 & \cellcolor{blue!25} 0.2184 & 0.2184 & N/A \\ \hline
+    \textit{Mutation Step} & $X\sim U(0,1) * 0.3$ & \cellcolor{blue!25} $X\sim N(\mu,\sigma^2)$ & $X\sim N(\mu,\sigma^2)$ & $X\sim N(\mu,\sigma^2)$ & $X\sim (\mu,\sigma^2)$ & N/A \\ \hline
+    \textit{Mutation Step} $\mu$ & N/A & \cellcolor{blue!25} Gene Value & Gene Value  & Gene Value  & Gene Value & N/A \\ \hline
+    \textit{Mutation Step} $\sigma$ & N/A & \cellcolor{blue!25} 0.5 & \cellcolor{blue!25} $M_{Prob.}$ & $M_{Prob.}$ & $M_{Prob.}$ & N/A \\ \hline
+    \end{tabular}
+\caption{Here you see the genetic algorithm parameters used per experiment. The highlighted cells indicate the experimental variables per experiment. Experiment six and seven are included in the table for completeness but no evolution ever took place.}
+\label{tab:exps}
+\normalsize
+\end{table}
+
+\subsection{Experiment one: use of a full and partial credit granting fitness function.}
+
+Experiment one centered around the use of a fitness function that would give full and partial credit based on the behavior of the neural network and thus the paddle. The genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was saved. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the desktop. The genetic algorithm parameters used are listed in Table \ref{tab:exp1}.
+
+During each generation of the genetic algorithm, each genome from the population was allowed to run one round until the round terminated either due to the ball leaving the left side of the screen or the ball's velocity magnitude dropping below $100$. Note that during the round, the paddle's movement (in relation to the ball's movement) was tracked via an array as well as how many times the paddle hit the ball during the round. Once the round terminated, the genome was evaluated by the fitness function. During evaluation, if the genome's phenotype (the paddle's observable characteristics) followed the ball (from one draw loop to next) it would be given a positive partial fitness credit of $0.1$ every time it followed the ball. If the phenotype managed to collide with the ball, the genome was given a full fitness credit of $1$ every time it hit the ball. However, if the phenotype moved away from the ball (from one draw loop to the next), it was given a negative partial fitness credit of $-0.1$ every time it moved away from the ball. Lastly, if the phenotype didn't move at all (while the ball moved from one draw loop to the next) it was given $0$ fitness every time it didn't move. At the end of the fitness function, all of these partial and full fitness credits were summed giving the currently-being-evaluated genome its total fitness. If the total summed fitness was less than zero, the total summed fitness was set to zero. That is, no genome's fitness---after having been evaluated by the fitness function at the end of its round---was ever negative. 
+
+To facilitate tracking the paddle's movements in relation to the ball's movements (during the round), the absolute difference in heights between the paddle's center and the ball center's were recorded every draw loop into an array. Once the genome was ready to be evaluated, this array of differences was analyzed linearly in pairs, that is, $A[i]$ was compared with $A[i+1]$. If $A[i]>A[i+1]$ this indicated that the paddle's center was moving closer to the ball's center and thus the genome was awarded a positive partial credit fitness. If $A[i]<A[i+1]$ this indicated that the paddle's center was moving away from the ball's center and thus the genome was awarded a negative partial credit fitness. If $A[i]=A[i+1]$ this indicated that the paddle's center was neither moving toward nor away from the ball's center and thus the genome was awarded $0$ fitness. A special case for $A[i]=A[i+1]$ was that if $A[i]=0$ and thus $A[i+1]=0$ as well, the paddle was awarded a positive partial fitness as the paddle's center was dead center with the ball's center and therefore the paddle was directly in the path of the ball which is ultimately the goal---that is, the paddle should always match its center with the ball's center thereby always preventing the ball from leaving the arena.
+
+The hypothesis for using a full and partial fitness credit schema was that every new generation produced would have genomes that at least performed somewhat better than their predecessors at the optimal behaviors. Those optimal behaviors are following the ball and hitting the ball. Originally, only hitting the ball was going to be the fitness criteria. However, early generations may never hit the ball and thus would have zero fitness. Genomes that at least followed the ball could have been erroneously discarded due to having zero fitness. By giving partial credit for at least following the ball, it was hypothesized that it would seed early generations with promising genomes or rather promising solutions to the parameter space. Picture a classroom of students taking a test. Upon evaluation, it is either all or nothing credit per question and no student finds the solution to any problem. In other words, every student received a zero. This would give the teacher no information as to the quality of the students at least in terms of comparing them to one another. However, if partial credit is given for getting part of the solution correct, then this would give at least some information as to who performed well among the students. In other words, it was hypothesized that by using a finer grained fitness function, there would be some information gained as to the fitness of one genome compared to another (aiding elitism and the selection process) versus no information gained using only a coarsely grained fitness function resulting in every genome having a fitness of zero after being evaluated.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
 \hline
+Population Size                                                      & 10                                                        \\ \hline
 Number of Elite Offspring                                            & 2                                                         \\ \hline
 Roulette Selection using Actual Fitness                              & True                                                      \\ \hline
 Roulette Selection using Rank Fitness                                & False                                                     \\ \hline
@@ -242,13 +295,13 @@ Fitness Credit for not Following the Ball                            & -0.1     
 
 % Talk about wide gaps of fitness. Giving poor performers at least some chance of being selected for crossover and mutation. Keeping the population diverse and avoiding early convergence due to the top performers just swapping the same genes over and over after x generations.
 
-Experiment two had a simplified fitness function, used a genome's rank fitness during selection, increased the crossover probability, based the mutation probability on the number of genes per genome, and used Gaussian distribution sampling as the mutation step. The genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was set aside. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the desktop. The genetic algorithm parameters used are listed in Table \ref{tab:exp2}.
+Experiment two had a simplified fitness function, used a genome's rank fitness during selection, increased the crossover probability, based the mutation probability on the number of genes per genome, and used Gaussian distribution sampling as the mutation step. The genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was saved. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the desktop. The genetic algorithm parameters used are listed in Table \ref{tab:exp2}.
 
 Going from awarding full and partial credit fitness based on two behaviors to only awarding a fitness credit of $1$ if the paddle was in the path of the ball per every draw loop, the fitness function was simplified. Here the paddle doesn't necessarily have to be dead center to the ball but rather the paddle's top must be at or above the ball's top while at the same time the paddle's bottom has to be at or below the ball's bottom. See Figure \ref{fig:simple_fit_func}. The reasoning behind this was that if the paddle were to always be in the path of the ball then it would always hit the ball and thus the paddle would never let the ball leave the arena or in other words the paddle would exhibit the optimum desired behavior. Therefore, this fitness function correctly evaluates the paddle's (or rather the genome phenotype's) behavior in relation to ball's movement through out any round.
 
 \begin{figure}[H]  
   \centering
-  \includegraphics[width=.5\textwidth]{figures/simple_fit_func.png}
+  \includegraphics[width=.45\textwidth]{figures/simple_fit_func.png}
   \caption{Here you see the simplified fitness function graphically where the paddle on the left is gaining fitness (as indicated by the green-hued bar) while the paddle on the right is gaining no fitness (as indicated by the purple-hued bar).}
   \label{fig:simple_fit_func}
 \end{figure}
@@ -259,19 +312,21 @@ Rank fitness is a genome's fitness according to their index in the population af
 
 \begin{figure}[H]  
   \centering
-  \includegraphics[width=1\textwidth]{figures/roulette.png}
-  \caption{Here you see actual fitness versus rank fitness probabilities of being selected.}
+  \includegraphics[width=.9\textwidth]{figures/roulette.png}
+  \caption{Here you see roulette selection using actual fitness versus rank fitness for a population of 10 genomes. On the left, the integers are the genomes' actual fitness and the percentages are their probabilities of being selected. On the right, the integers are the genomes' rank fitness and the percentages are the genomes' probabilities of being selected. Observe that Genome 10 no longer dominates the wheel when using its rank fitness ($10$) versus using its actual fitness ($100)$.}
   \label{fig:roulette}
 \end{figure}
 
 Crossover probability was increased from $0.7$ to $0.8$. This of course would result in more observed crossovers being generated as new populations were created. Since crossover produces an offspring solution  somewhere between its parents in the fitness landscape, it was hypothesized that by increasing the crossover probability the local search capability of the genetic algorithm would also increase.
 
-Based on empirical studies performed by others, setting the mutation probability to $\frac{1}{n}$---where $n$ is the number of genes per genome---is a sufficient enough amount of random search to allow the genetic algorithm to escape local maximum in the fitness landscape \cite{predictive_models}. The reasoning behind $\frac{1}{n}$ is that per mutation on a gene-by-gene basis, only one gene is changed on average. In addition to changing the mutation probability, the mutation step was changed from adding and/or subtracting a percentage of a max perturbation parameter value to and/or from the gene value to sampling a value from a Gaussian distribution where the mean is the gene's current value before mutation and the standard deviation is one fourth the valid range of the gene/parameter $\left (\frac{1-(-1)}{4}=0.5 \right )$. Here the standard deviation is one fourth the range and thus most of the sampled values will be within two standard deviations of the mean or rather the gene value. Any sampled gene value that was outside the valid range of $[-1,1]$ was clipped to the valid range. Note that by going with this new mutation step schema, the max perturbation parameter to the genetic algorithm could be removed thereby lessening the amount of parameters---to the genetic algorithm---that need to be experimented/played with. 
+Based on empirical studies performed by others, setting the mutation probability to $\frac{1}{n}$---where $n$ is the number of genes per genome---is a sufficient enough amount of random search to allow the genetic algorithm to escape local maxima in the fitness landscape \cite{predictive_models}. The reasoning behind $\frac{1}{n}$ is that per mutation on a gene-by-gene basis, only one gene is mutated on average. In addition to changing the mutation probability, the mutation step was changed from adding and/or subtracting a percentage of a maximum perturbation parameter value to and/or from the gene value to sampling a value from a Gaussian distribution where the distribution $N(\mu,\sigma^2)$ is defined by the mean $\mu$ being the gene's current value before mutation and the standard deviation $\sigma$ being one fourth the valid range of the gene/parameter $\left(\frac{1-(-1)}{4}=0.5 \right)$. Here the standard deviation $\sigma$ is one fourth the range and thus most of the sampled values will be within two standard deviations of the mean $\mu$ or rather the gene value. Any sampled gene value that was outside the valid range of $[-1,1]$ was clipped to the valid range. Note that by going with this new mutation step schema, the maximum perturbation parameter to the genetic algorithm could be removed thereby lessening the amount of parameters---to the genetic algorithm---that need to be evaluated. 
 
 \begin{table}[H]
+\centering
 \footnotesize
-\begin{tabular}{ >{\columncolor[gray]{0.8}} l | l }
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
 \hline
+Population Size                                                      & 10                                                                \\ \hline
 Number of Elite Offspring                                            & 2                                                                 \\ \hline
 Roulette Selection using Actual Fitness                              & False                                                             \\ \hline
 Roulette Selection using Rank Fitness                                & True                                                              \\ \hline
@@ -280,13 +335,13 @@ Crossover Type                                                       & One Point
 Mutation Probability                                                 & $\frac{1}{n \ genes}=\frac{1}{41} = 0.024390244$                  \\ \hline
 Mutation Scope                                                       & Gene Level                                                        \\ \hline
 Mutation Step                                                        & Gaussian Dist. Sample $\in N(\mu=gene \ value, \sigma = 0.5)$     \\ \hline
-Max Perturbation                                                     & N/A                                                       	 \\ \hline
-Sequential Crossover and Mutation                                    & True                                                      	 \\ \hline
-Offspring not Crossed/Mutated Allowed in New Generation              & True                                                     	 \\ \hline
-Fitness Credit for Hitting the Ball                                  & N/A                                                      	 \\ \hline
-Fitness Credit for Following the Ball                                & N/A                                                      	 \\ \hline
-Fitness Credit for not Following the Ball                            & N/A                                                      	 \\ \hline
-Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	 \\ \hline
+Max Perturbation                                                     & N/A                                                       	       \\ \hline
+Sequential Crossover and Mutation                                    & True                                                      	       \\ \hline
+Offspring not Crossed/Mutated Allowed in New Generation              & True                                                     	       \\ \hline
+Fitness Credit for Hitting the Ball                                  & N/A                                                      	       \\ \hline
+Fitness Credit for Following the Ball                                & N/A                                                      	       \\ \hline
+Fitness Credit for not Following the Ball                            & N/A                                                      	       \\ \hline
+Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	       \\ \hline
 \end{tabular}
 \caption{Here you see the genetic algorithm parameters for experiment two.}
 \label{tab:exp2}
@@ -294,9 +349,9 @@ Fitness Credit for Staying in the Path of the Ball                   & 1.0      
 
 \subsection{Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}
 
-Experiment three involved self-adaptation of the crossover and mutation probabilities. The genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was set aside. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp3}.
+Experiment three involved self-adaptation of the crossover and mutation probabilities. The genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was saved. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp3}.
 
-As outlined in \cite{self_adapt}, the crossover and mutation probabilities self-adapt based on the crossover and mutation operators' ability to produce fitter genomes from one generation to the next. To facilitate the self-adaptation, the crossover and mutation operators' viability to produce fitter and fitter offspring needed to be tracked from one generation to another. As the operators were being evaluated on their own accord, they were not allowed to interfere with each others offspring and thus they were not run in sequence but rather were run in parallel. With each new generation produced, elite offspring were marked accordingly as well as offspring produced by crossover and offspring produced my mutation. For those offspring that were created by crossover, their parents' weighted mean fitness was annotated along with the offspring. This weighted mean fitness was calculated based on the crossover point thereby determining what percentage of genes came from one parent and what percentage of genes came from the other parent. For example, let there be 41 genes per genome and let the crossover point be gene 10. Thus the offspring received 10 genes from parent one and received 31 genes from parent two. Therefore the offspring's weighted mean parent fitness would be calculated as $\bar{x} = \left ( p_1.fitness * \frac{10}{41} \right ) + \left (p_2.fitness * \frac{(41-10)}{41} \right)$. For those offspring created via mutation, their parent fitness was whatever the fitness was of the pre-mutated genome. 
+As outlined in \cite{self_adapt}, the crossover and mutation probabilities self-adapt based on the crossover and mutation operators' ability to produce fitter genomes from one generation to the next. To facilitate the self-adaptation, the crossover and mutation operators' viability to produce fitter and fitter offspring needed to be tracked from one generation to another. As the operators were being evaluated on their own accord, they were not allowed to interfere with each others' offspring and thus they were not run in sequence but rather were run in parallel. With each new generation produced, elite offspring were marked accordingly as well as offspring produced by crossover and offspring produced by mutation. For those offspring that were created by crossover, their parents' weighted-mean fitness was annotated along with their offspring. Annotated meaning it was recorded in the offspring's data-structure later being used to calculate the crossover operator's progress. This weighted-mean fitness was calculated based on the crossover point which determines what percentage of genes came come from parent one and what percentage of genes came from parent two. For example, let there be 41 genes per genome and let the crossover point be gene 10. Thus, offspring one received 10 genes from parent one and received 31 genes from parent two while offspring two received 10 genes from parent two and received 31 genes from parent one. Therefore, offspring one's weighted-mean parent fitness would be calculated as $\overline{PF} = \left ( PF_1 * \frac{10}{41} \right ) + \left (PF_2 * \frac{(41-10)}{41} \right)$ where $\overline{PF}$ is the weighted-mean parent fitness while offspring two's weight-mean parent fitness would be calculated as $\overline{PF} = \left ( PF_2 * \frac{10}{41} \right ) + \left (PF_1 * \frac{(41-10)}{41} \right)$. For those offspring created via mutation, their parent fitness was whatever the fitness was of the pre-mutated genome. 
 
 With the genomes marked as to how they were created and their parent fitness annotated, now when it came time to produce a new population, each operators' ability to produce fitter offspring could be tracked and calculated. Once a population was evaluated, all genomes created by crossover were used to calculate the average crossover progress and all genomes created by mutation were used to calculate the average mutation progress. If the crossover progress average was greater than the mutation progress average then the crossover probability would be adjusted up and the mutation probability would be adjusted down. Alternatively, if the crossover progress average was less than the mutation progress average then the crossover probability would be adjusted down and the mutation probability would be adjusted up. If the crossover progress average equaled the mutation progress average then neither were adjusted. In other words, for example, if the crossover operator produced fitter genomes greater than the mutation operator did for the last generation, then the probability of creating offspring via crossover would be increased and the probability of creating offspring via mutation would be decreased for the creation of the next generation. Adjustment of the crossover and mutation probabilities were adjusted by the adjustment parameter. Let the adjustment parameter be denoted as $\theta$. Here $\theta$ was self-adjusted as well as outlined in \cite{self_adapt}. Once the probabilities were adjusted they were clamped to the range $[0.001,1.0]$. With a minimum probability of $0.001$, there would always be some crossover and/or mutation albeit not much. See Figure \ref{fig:sa}. Note that to insure a level playing field, both the crossover and mutation probabilities were set to an initial value of $0.5$ before the start of the genetic algorithm.
 
@@ -339,12 +394,14 @@ Begin \ Self\!-\!adaptation: & \\
 
 \vspace{3mm}
 
-Unlike previous experiments, the mutation probability was not on a gene-by-gene basis but rather on a whole genome-by-genome basis. Every time through the population creation loop, a random float value was sampled from a uniform distribution between $0.0$ and $1.0$. If this random float value was less than or equal to the mutation probability, every gene in the selected genome was mutated using the Gaussian distribution mutation step method outlined earlier. However, the standard deviation was set to the mutation probability instead of it being statically set to $0.5$ as before. The reason being that a high mutation probability would give way to a larger mutation step (since the standard deviation would be relatively large) allowing for larger random leaps around the fitness landscape while a low mutation probability would give way to a smaller mutation step (since the standard deviation would be relatively small) allowing for a more finely tuned search as the population converges to the optimum in the fitness landscape.
+Unlike previous experiments, the mutation probability was not set on a gene-by-gene basis but rather on a whole genome-by-genome basis. Every time through the population creation loop, a random float value was sampled from a uniform distribution between $0.0$ and $1.0$. If this random float value was less than or equal to the mutation probability, every gene in the selected genome was mutated using the Gaussian distribution mutation step method outlined earlier. However, the standard deviation was set to the mutation probability instead of it being statically set to $0.5$ as before. The reason being that a high mutation probability would give way to a larger mutation step (since the standard deviation would be relatively large) allowing for larger random leaps around the fitness landscape while a low mutation probability would give way to a smaller mutation step (since the standard deviation would be relatively small) allowing for a more finely tuned search as the population converges to the optimum in the fitness landscape.
 
 \begin{table}[H]
+\centering
 \footnotesize
-\begin{tabular}{ >{\columncolor[gray]{0.8}} l | l }
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
 \hline
+Population Size                                                      & 10                                                                           \\ \hline
 Number of Elite Offspring                                            & 2                                                                            \\ \hline
 Roulette Selection using Actual Fitness                              & False                                                                        \\ \hline
 Roulette Selection using Rank Fitness                                & True                                                                         \\ \hline
@@ -356,9 +413,9 @@ Initial Mutation Probability                                         & 0.5      
 Minimum Mutation Probability                                         & 0.001                                                                        \\ \hline
 Mutation Scope                                                       & Genome Level                                                                 \\ \hline
 Mutation Step                                                        & Gaussian Dist. Sample $\in N(\mu=gene \ val., \sigma = mutation \ prob.)$    \\ \hline
-Sequential Crossover and Mutation                                    & False                                                      	            \\ \hline
-Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	            \\ \hline
-Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	            \\ \hline
+Sequential Crossover and Mutation                                    & False                                                      	             \\ \hline
+Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	                  \\ \hline
+Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	                  \\ \hline
 \end{tabular}
 \caption{Here you see the genetic algorithm parameters for experiment three.}
 \label{tab:exp3}
@@ -366,14 +423,16 @@ Fitness Credit for Staying in the Path of the Ball                   & 1.0      
 
 \subsection{Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}
 
-Experiment four had an identical setup to experiment three with the exception that the crossover and mutation probability was statically set, through out the experiment, to the crossover and mutation probabilities arrived at after the 100 generational run of the genetic algorithm in experiment three. As with the previous experiments, the genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was set aside. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp4}.
+Experiment four had an identical setup to experiment three with the exception that the crossover and mutation probability was statically set, through out the experiment, to the crossover and mutation probabilities arrived at after the 100 generational run of the genetic algorithm in experiment three. As with the previous experiments, the genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was saved. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp4}.
 
 Experiment four as well as experiment five were devised as comparisons to experiment three. The hypothesis was that self-adaptation, along with non-interfering operators, would have the fastest average fitness growth rate among the three.
 
 \begin{table}[H]
+\centering
 \footnotesize
-\begin{tabular}{ >{\columncolor[gray]{0.8}} l | l }
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
 \hline
+Population Size                                                      & 10                                                                           \\ \hline
 Number of Elite Offspring                                            & 2                                                                            \\ \hline
 Roulette Selection using Actual Fitness                              & False                                                                        \\ \hline
 Roulette Selection using Rank Fitness                                & True                                                                         \\ \hline
@@ -383,9 +442,9 @@ Crossover Type                                                       & One Point
 Mutation Probability                                                 & 0.2184                                                                       \\ \hline
 Mutation Scope                                                       & Genome Level                                                                 \\ \hline
 Mutation Step                                                        & Gaussian Dist. Sample $\in N(\mu=gene \ val., \sigma = mutation \ prob.)$    \\ \hline
-Sequential Crossover and Mutation                                    & False                                                      	            \\ \hline
-Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	            \\ \hline
-Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	            \\ \hline
+Sequential Crossover and Mutation                                    & False                                                      	             \\ \hline
+Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	                  \\ \hline
+Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	                  \\ \hline
 \end{tabular}
 \caption{Here you see the genetic algorithm parameters for experiment four.}
 \label{tab:exp4}
@@ -393,14 +452,16 @@ Fitness Credit for Staying in the Path of the Ball                   & 1.0      
 
 \subsection{Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}
 
-Experiment five had an identical setup as experiment four with the exception that the crossover and mutation operators were run in sequence instead of in parallel. By running the operators in sequence, one operator could disrupt the offspring/solutions created by the other operator. As with the other experiments, the genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was set aside. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp5}.
+Experiment five had an identical setup as experiment four with the exception that the crossover and mutation operators were run in sequence instead of in parallel. By running the operators in sequence, the mutation operator could disrupt the offspring/solutions created by the crossover operator. As with the other experiments, the genetic algorithm was run for 100 generations with each generation's average fitness being recorded. Once every 10th generation, the current population's top performing genome was saved. These 10 every-10th-generation-top-performers were run for five rounds each with the time they kept the ball-in-play being recorded per each one of their individual five rounds. Once an every-10th-generation-top-performer was done with their five rounds, the average of their ball-in-play time was calculated and recorded. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp5}.
 
 Experiment five as well as experiment four were devised as comparisons to experiment three. The hypothesis was that self-adaptation, along with non-interfering operators, would have the fastest average fitness growth rate among the three.
 
 \begin{table}[H]
+\centering
 \footnotesize
-\begin{tabular}{ >{\columncolor[gray]{0.8}} l | l }
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
 \hline
+Population Size                                                      & 10                                                                             \\ \hline
 Number of Elite Offspring                                            & 2                                                                              \\ \hline
 Roulette Selection using Actual Fitness                              & False                                                                          \\ \hline
 Roulette Selection using Rank Fitness                                & True                                                                           \\ \hline
@@ -410,9 +471,9 @@ Crossover Type                                                       & One Point
 Mutation Probability                                                 & 0.2184                                                                         \\ \hline
 Mutation Scope                                                       & Gene Level                                                                     \\ \hline
 Mutation Step                                                        & Gaussian Dist. Sample $\in N(\mu=gene \ val., \sigma = mutation \ prob.)$      \\ \hline
-Sequential Crossover and Mutation                                    & True                                                      	              \\ \hline
-Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	              \\ \hline
-Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	              \\ \hline
+Sequential Crossover and Mutation                                    & True                                                      	                    \\ \hline
+Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	                    \\ \hline
+Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	                    \\ \hline
 \end{tabular}
 \caption{Here you see the genetic algorithm parameters for experiment five.}
 \label{tab:exp5}
@@ -420,31 +481,68 @@ Fitness Credit for Staying in the Path of the Ball                   & 1.0      
 
 \subsection{Experiment six: fitness and ball-in-play upper bound.}
 
-The setup for experiment six was identical to that of experiment three with the exception that no evolution ever took place (crossover and mutation probability was set to $0.0$). With no evolution taking place, the number-of-elite-offspring parameter was set to $10$---equal to the population size---in order to keep the genetic algorithm operable. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp6}. 
+The setup for experiment six was identical to that of experiment two, three, four, and five with the exception that no evolution ever took place (crossover and mutation probabilities were set to $0.0$) during the run of the genetic algorithm over 100 generations. Only the simplified fitness function (described in experiment two) was used during the run of the genetic algorithm. With no evolution taking place, the number-of-elite-offspring parameter was set to $10$---equal to the population size---in order to keep the genetic algorithm operable. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp6}. 
 
-The goal of experiment six was to obtain the average fitness over 100 generations, the fitness of every 10th generation top performer, and the average ball-in-play time of five rounds per every 10th generation top performer where the paddle always performed the correct movement no matter the state of the paddle and the ball at any time during any round. In other words, the goal of experiment six was to obtain a fitness upper bound and a ball-in-play time upper bound utilizing the same fitness function as was used in experiment three, four, and five. 
+The goal of experiment six was to obtain the average fitness over 100 generations, the fitness of every 10th generation top performer, and the average ball-in-play time of five rounds per every 10th generation top performer where the paddle always performed the correct movement no matter the state of the paddle and the ball at any time during any round. In other words, the goal of experiment six was to obtain an average fitness upper bound and an average ball-in-play time of five rounds upper bound utilizing the same fitness function as was used in experiment two, three, four, and five. 
 
-To accomplish the goal of experiment six, the neural network output was ignored and instead, the difference in heights between the paddle's center and the ball's center was used to determine the paddle's velocity magnitude and its velocity angle at every draw loop. If the difference was $\vartriangle\!y<0$ (meaning the paddle was higher up the screen than the ball) the paddle's velocity angle was set to $\theta=270.0^\circ$ and the paddle's velocity magnitude was set to $m = -1 * \vartriangle\!y * 10$. Otherwise, if the difference was $\vartriangle\!y\geq 0$ (meaning the paddle was lower down the screen than the ball) the paddle's velocity angle was set to $\theta=90.0^\circ$ and the paddle's velocity magnitude was set to $m = \vartriangle\!y * 10$. With this modification, the paddle was always in the path of the ball and thus always kept the ball from leaving the left side of the arena. At no point was the paddle ever not in the path of the ball and thus the paddle always obtained the maximum fitness possible as well as the maximum ball-in-play time possible for any particular round. The only way any round ever terminated was by the ball's velocity magnitude falling below the $100$ threshold. 
+To accomplish the goal of experiment six, the neural-network output was ignored and instead, the paddle's center height or rather its center $y$ coordinated was always set to the ball's center $y$ coordinate once every draw loop. With this modification, the paddle was always dead center with the ball, was always in the path of the ball, and thus always kept the ball from leaving the left side of the arena. That is, it always hit the ball back into the arena. At no point was the paddle ever not in the path of the ball and thus the paddle always obtained the maximum fitness possible as well as the maximum ball-in-play time possible for any particular round. The only way any round ever terminated was by the ball's velocity magnitude falling below the $100$ threshold.  
+
+% the difference in heights between the paddle's center and the ball's center was used to determine the paddle's velocity magnitude and its velocity angle at every draw loop. If the difference was $\vartriangle\!y<0$ (meaning the paddle was higher up the screen than the ball) the paddle's velocity angle was set to $\theta=270.0^\circ$ and the paddle's velocity magnitude was set to $m = -1 * \vartriangle\!y * 10$. Otherwise, if the difference was $\vartriangle\!y\geq 0$ (meaning the paddle was lower down the screen than the ball) the paddle's velocity angle was set to $\theta=90.0^\circ$ and the paddle's velocity magnitude was set to $m = \vartriangle\!y * 10$. With this modification, the paddle was always in the path of the ball and thus always kept the ball from leaving the left side of the arena. That is, it always hit the ball back into the arena. At no point was the paddle ever not in the path of the ball and thus the paddle always obtained the maximum fitness possible as well as the maximum ball-in-play time possible for any particular round. The only way any round ever terminated was by the ball's velocity magnitude falling below the $100$ threshold. 
 
 \begin{table}[H]
+\centering
 \footnotesize
-\begin{tabular}{ >{\columncolor[gray]{0.8}} l | l }
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
 \hline
-Number of Elite Offspring                                            & 10                                                                             \\ \hline
-Roulette Selection using Actual Fitness                              & False                                                                          \\ \hline
-Roulette Selection using Rank Fitness                                & True                                                                           \\ \hline
-Self-adaptation                                                      & False                                                                          \\ \hline
-Crossover Probability                                                & 0.0                                                                            \\ \hline
-Crossover Type                                                       & One Point Crossover                                                            \\ \hline
-Mutation Probability                                                 & 0.0                                                                            \\ \hline
-Mutation Scope                                                       & Gene Level                                                                     \\ \hline
-Mutation Step                                                        & Gaussian Dist. Sample $\in N(\mu=gene \ val., \sigma = mutation \ prob.)$      \\ \hline
-Sequential Crossover and Mutation                                    & False                                                      	              \\ \hline
-Offspring not Crossed/Mutated Allowed in New Generation              & False                                                     	              \\ \hline
+Population Size                                                      & 10                                                                       \\ \hline
+Number of Elite Offspring                                            & 10                                                                       \\ \hline
+Roulette Selection using Actual Fitness                              & N/A                                                                      \\ \hline
+Roulette Selection using Rank Fitness                                & N/A                                                                      \\ \hline
+Self-adaptation                                                      & N/A                                                                      \\ \hline
+Crossover Probability                                                & N/A                                                                      \\ \hline
+Crossover Type                                                       & N/A                                                                      \\ \hline
+Mutation Probability                                                 & N/A                                                                      \\ \hline
+Mutation Scope                                                       & N/A                                                                      \\ \hline
+Mutation Step                                                        & N/A                                                                      \\ \hline
+Sequential Crossover and Mutation                                    & N/A                                                       	              \\ \hline
+Offspring not Crossed/Mutated Allowed in New Generation              & N/A                                                      	              \\ \hline
 Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	              \\ \hline
 \end{tabular}
 \caption{Here you see the genetic algorithm parameters for experiment six.}
 \label{tab:exp6}
+\end{table}
+
+\subsection{Experiment seven: random paddles.} 
+
+% So how the random paddle was created using pseudocode. Talk about how this experiment was done to show that the GA genomes/NNs/paddles perform better than random.
+
+The setup for experiment seven was identical to that of experiment six where no evolution ever took place (crossover and mutation probabilities were set to $0.0$) during the run of the genetic algorithm over 100 generations. Only the simplified fitness function (described in experiment two) was used during the run of the genetic algorithm. With no evolution taking place, the number-of-elite-offspring parameter was set to $10$---equal to the population size---in order to keep the genetic algorithm operable. The platform used was the laptop. The genetic algorithm parameters used are listed in Table \ref{tab:exp7}. 
+
+The goal of experiment seven was to obtain the average fitness over 100 generations, the fitness of every 10th generation top performer, and the average ball-in-play time of five rounds per every 10th generation top performer where the paddle always performed a random movement. By obtaining these metrics for randomly moving paddles, it could be demonstrated that the genetic algorithm either did or did not ultimately produce paddles that performed better than the randomly moving paddles. 
+
+To accomplish the goal of experiment seven, the neural-network output was ignored and instead, the paddle's movement was always randomly generated once per draw loop. To generate the random movement, a random float was sampled from a uniform distribution $X\sim U(-1,1)$. If $X$ was in the range $[-1,0)$, the paddle's velocity angle was set to $270^\circ$ and the paddle's velocity magnitude was set to $m_{new} = -1 * X * m_{initial}$ where $m_{initial}$ was the paddle's starting velocity magnitude (specifically $1000 \ \frac{pixels}{second}$). If $X$ was in the range $(0,1]$, the paddle's velocity angle was set to $90^\circ$ and the paddle's velocity magnitude was set to $m_{new} = X * m_{initial}$. Otherwise, if $X$ was zero, the paddle did not move from its current position. 
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{ |>{\columncolor[gray]{0.8}} l | l| }
+\hline
+Population Size                                                      & 10                                                                       \\ \hline
+Number of Elite Offspring                                            & 10                                                                       \\ \hline
+Roulette Selection using Actual Fitness                              & N/A                                                                      \\ \hline
+Roulette Selection using Rank Fitness                                & N/A                                                                      \\ \hline
+Self-adaptation                                                      & N/A                                                                      \\ \hline
+Crossover Probability                                                & N/A                                                                      \\ \hline
+Crossover Type                                                       & N/A                                                                      \\ \hline
+Mutation Probability                                                 & N/A                                                                      \\ \hline
+Mutation Scope                                                       & N/A                                                                      \\ \hline
+Mutation Step                                                        & N/A                                                                      \\ \hline
+Sequential Crossover and Mutation                                    & N/A                                                       	              \\ \hline
+Offspring not Crossed/Mutated Allowed in New Generation              & N/A                                                      	              \\ \hline
+Fitness Credit for Staying in the Path of the Ball                   & 1.0                                                      	              \\ \hline
+\end{tabular}
+\caption{Here you see the genetic algorithm parameters for experiment seven.}
+\label{tab:exp7}
 \end{table}
 
 \section{Experimental Results}
@@ -596,6 +694,29 @@ The crossover and mutation probabilities were both initially set to $0.5$ before
   \label{fig:exp6_10_tops_times}
 \end{figure}
 
+\subsection{Experiment seven: random paddles.}
+
+\begin{figure}[H]  
+  \centering
+  \includegraphics[width=1\textwidth]{figures/exp7_avg_fit.png}
+  \caption{Here you see the average fitness over 100 generations for experiment seven.}
+  \label{fig:exp7_avg_fit}
+\end{figure}
+
+\begin{figure}[H]  
+  \centering
+  \includegraphics[width=1\textwidth]{figures/exp7_10_tops.png}
+  \caption{Here you see the fitness of the every 10th generation top performer for experiment seven.}
+  \label{fig:exp7_10_tops}
+\end{figure}
+
+\begin{figure}[H]  
+  \centering
+  \includegraphics[width=1\textwidth]{figures/exp7_10_tops_times.png}
+  \caption{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment seven.}
+  \label{fig:exp7_10_tops_times}
+\end{figure}
+
 \section{Comparative Analysis}
 
 \subsection{Experiment one and two.}
@@ -652,6 +773,8 @@ The crossover and mutation probabilities were both initially set to $0.5$ before
   \caption{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment five and six.}
   \label{fig:exp56_10_tops_times}
 \end{figure}
+
+\subsection{Experiment one, two, three, four, five, six, and seven.}
 
 \section{Conclusion}
 

@@ -448,9 +448,12 @@ function Genetic_Algorithm( params )
 				
 				// Weighted average fitness of the parents based on crossover point
 				// determining percentage of genes received from parent one and parent two.
+				// Let the number of genes per genome be 41 and let the crossover point be 1. 
+				// Offspring gets [0,1) = 1 gene from parent one and [1,41) = 40 genes from parent two. 
+				// PF = PF1 * (1/41) + PF2 * ((41-1)/41).
 				
-				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( (                                           crossover_point ) / ( this.number_of_genes_per_genome - 1 ) ) );
-				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( ( ( this.number_of_genes_per_genome - 1 ) - crossover_point ) / ( this.number_of_genes_per_genome - 1 ) ) );
+				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
+				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );
 				
 				offspring.parent_fitness = parent_one_contribution + parent_two_contribution;
 				
@@ -488,7 +491,7 @@ function Genetic_Algorithm( params )
 		if ( get_random_float( 0.0, 1.0 ) <= this.mutation_probability )
 		{
 		
-			// Reference: http://www.nashcoding.com/2010/07/07/evolutionary-algorithms-the-little-things-youd-never-guess-part-1/#fn-28-1
+			// Reference: http://www.nashcoding.com/2010/07/07/evolutionary-algorithms-the-little-things-youd-never-guess-part-1/
 			
 			function gaussian_distribution( mean, standard_deviation )
 			{
@@ -602,8 +605,8 @@ function Genetic_Algorithm( params )
 		offspring_one.fitness = 0.0;
 		offspring_two.fitness = 0.0;
 		
-		offspring_one.parent_fitness = 0.0;
-		offspring_two.parent_fitness = 0.0;
+		offspring_one.parent_fitness = null;
+		offspring_two.parent_fitness = null;
 		
 		offspring_one.created_by = 0;
 		offspring_two.created_by = 0;
@@ -639,8 +642,8 @@ function Genetic_Algorithm( params )
 				( offspring_one.genes.toString( ) != this.population[ parent_two_index ].genes.toString( ) ) )
 			{
 				
-				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( (                                           crossover_point ) / ( this.number_of_genes_per_genome - 1 ) ) );
-				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( ( ( this.number_of_genes_per_genome - 1 ) - crossover_point ) / ( this.number_of_genes_per_genome - 1 ) ) );	
+				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
+				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );	
 				
 				offspring_one.parent_fitness = parent_one_contribution + parent_two_contribution;
 				
@@ -652,219 +655,186 @@ function Genetic_Algorithm( params )
 				( offspring_two.genes.toString( ) != this.population[ parent_two_index ].genes.toString( ) ) )
 			{
 				
-				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( (                                           crossover_point ) / ( this.number_of_genes_per_genome - 1 ) ) );
-				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( ( ( this.number_of_genes_per_genome - 1 ) - crossover_point ) / ( this.number_of_genes_per_genome - 1 ) ) );	
+				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
+				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );	
 				
 				offspring_two.parent_fitness = parent_one_contribution + parent_two_contribution;
 				
 				offspring_two.created_by = offspring_two.created_by + 1;				
 				
-			}
-			
-			// Did they both experience crossover?
-			// If yes, now try to mutate.
-			// If not, stop, return 0.
-			
-			if ( offspring_one.created_by === 1 && offspring_two.created_by === 1 )
-			{
-				
-				// Now try to mutate.
-				
-				function gaussian_distribution( mean, standard_deviation )
-				{
-					
-					// Two uniformally distributed random variable samples.
-					
-					var x1 = Math.random( );
-					var x2 = Math.random( );
-
-					// The method requires sampling from a uniform random of (0,1]
-					// but Math.random( ) returns a sample of [0,1).
-					
-					if ( x1 == 0.0 ) x1 = 1.0;
-					if ( x2 == 0.0 ) x2 = 1.0;
-					
-					// Box-Muller transformation for Z_0.
-
-					var y1 = Math.sqrt( -2.0 * Math.log( x1 ) ) * Math.cos( 2.0 * Math.PI * x2 );
-					
-					return ( y1 * standard_deviation ) + mean;
-					
-				}
-				
-				var mutated_one = false;
-				var mutated_two = false;
-				
-				for ( var i = 0; i < this.number_of_genes_per_genome; ++i )
-				{
-
-					// Mutate this gene by sampling a value from a normal distribution
-					// where the mean is the current gene value and the standard deviation
-					// the is mutation step = mutation probability in the range [0,1].
-					// A low mutation probability will give a mutated gene value close to the original gene 
-					// value (the mean) (most of the time) as the standard deviation is small and therefore the mutation step is small. 
-					// A high mutation probability will give (or it can easily) a mutated gene value farther from the original gene 
-					// value (the mean) as the standard deviation is large and therefore the mutation step is large. 
-					
-					// Note that gv = gv + σ*N(0,1) is the same as gv = N(gv,σ).
-
-					// Clamp the gene to range [-1,1].
-					
-					if ( get_random_float( 0.0, 1.0 ) <= this.mutation_probability ) // Mutate this gene?
-					{
-					
-						var temp_gene_value_one = deep_copy( offspring_one.genes[ i ] );
-						var temp_gene_value_two = deep_copy( offspring_two.genes[ i ] );
-						
-						offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );			
-						offspring_one.genes[ i ] = get_clamped_value( offspring_one.genes[ i ], -1.0, 1.0 );
-						
-						offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );			
-						offspring_two.genes[ i ] = get_clamped_value( offspring_two.genes[ i ], -1.0, 1.0 );
-						
-						// Test if it was truly mutated.
-						
-						if ( temp_gene_value_one != offspring_one.genes[ i ] )
-						{
-						
-							mutated_one = true;
-							
-						}
-						
-						if ( temp_gene_value_two != offspring_two.genes[ i ] )
-						{
-						
-							mutated_two = true;
-							
-						}
-						
-					}
-					
-				}
-				
-				if ( mutated_one ) // If truly mutated.
-				{
-				
-					offspring_one.created_by = offspring_one.created_by + 2;
-					
-				}
-				
-				if ( mutated_two ) // If truly mutated.
-				{
-				
-					offspring_one.created_by = offspring_two.created_by + 2;		
-					
-				}
-				
-				return { one: offspring_one, two: offspring_two };
-			
-			}
-			else
-			{
-				
-				return 0;
-				
-			}			
+			}						
 		
+		}
+			
+		// Crossover may or may not have happened but now try to mutation.
+		
+		// Normal distribution sample function.
+		
+		function gaussian_distribution( mean, standard_deviation )
+		{
+			
+			// Two uniformally distributed random variable samples.
+			
+			var x1 = Math.random( );
+			var x2 = Math.random( );
+
+			// The method requires sampling from a uniform random of (0,1]
+			// but Math.random( ) returns a sample of [0,1).
+			
+			if ( x1 == 0.0 ) x1 = 1.0;
+			if ( x2 == 0.0 ) x2 = 1.0;
+			
+			// Box-Muller transformation for Z_0.
+
+			var y1 = Math.sqrt( -2.0 * Math.log( x1 ) ) * Math.cos( 2.0 * Math.PI * x2 );
+			
+			return ( y1 * standard_deviation ) + mean;
+			
+		}
+		
+		if ( offspring_one.created_by === 0 ) // Not crossed (should be 1 if false)? Get parent's genes.
+		{
+
+			offspring_one.genes = deep_copy( this.population[ parent_one_index ].genes );
+			
+		}
+		
+		if ( offspring_two.created_by === 0 ) // Not crossed (should be 1 if false)? Get parent's genes.
+		{
+			
+			offspring_two.genes = deep_copy( this.population[ parent_two_index ].genes );
+			
+		}
+		
+		// Attempt to mutate offspring one.
+		
+		var mutated_one = false;		
+		
+		for ( var i = 0; i < this.number_of_genes_per_genome; ++i )
+		{
+
+			// Mutate this gene by sampling a value from a normal distribution
+			// where the mean is the current gene value and the standard deviation
+			// the is mutation step = mutation probability in the range [0,1].
+			// A low mutation probability will give a mutated gene value close to the original gene 
+			// value (the mean) (most of the time) as the standard deviation is small and therefore the mutation step is small. 
+			// A high mutation probability will give (or it can easily) a mutated gene value farther from the original gene 
+			// value (the mean) as the standard deviation is large and therefore the mutation step is large. 
+			
+			// Note that gv = gv + σ * N( 0, 1 ) is the same as gv = N( gv, σ ).
+
+			// Clamp the gene to range [-1,1].
+			
+			if ( get_random_float( 0.0, 1.0 ) <= this.mutation_probability ) // Mutate this gene?
+			{
+			
+				var temp_gene_value_one = deep_copy( offspring_one.genes[ i ] );
+				
+				offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );			
+				offspring_one.genes[ i ] = get_clamped_value( offspring_one.genes[ i ], -1.0, 1.0 );
+				
+				// Test if it was truly mutated.
+				
+				if ( temp_gene_value_one != offspring_one.genes[ i ] )
+				{
+				
+					mutated_one = true;
+					
+				}
+				
+			}
+			
+		}
+		
+		// Attempt to mutate offspring two.
+		
+		var mutated_two = false;
+		
+		for ( var i = 0; i < this.number_of_genes_per_genome; ++i )
+		{
+
+			// Mutate this gene by sampling a value from a normal distribution
+			// where the mean is the current gene value and the standard deviation
+			// the is mutation step = mutation probability in the range [0,1].
+			// A low mutation probability will give a mutated gene value close to the original gene 
+			// value (the mean) (most of the time) as the standard deviation is small and therefore the mutation step is small. 
+			// A high mutation probability will give (or it can easily) a mutated gene value farther from the original gene 
+			// value (the mean) as the standard deviation is large and therefore the mutation step is large. 
+			
+			// Note that gv = gv + σ * N( 0, 1 ) is the same as gv = N( gv, σ ).
+
+			// Clamp the gene to range [-1,1].
+			
+			if ( get_random_float( 0.0, 1.0 ) <= this.mutation_probability ) // Mutate this gene?
+			{
+			
+				var temp_gene_value_two = deep_copy( offspring_two.genes[ i ] );
+				
+				offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );			
+				offspring_two.genes[ i ] = get_clamped_value( offspring_two.genes[ i ], -1.0, 1.0 );
+				
+				// Test if it was truly mutated.
+				
+				if ( temp_gene_value_two != offspring_two.genes[ i ] )
+				{
+				
+					mutated_two = true;
+					
+				}
+				
+			}
+			
+		}
+		
+		if ( mutated_one ) // If truly mutated.
+		{
+		
+			// Mutation = 2, crossover = 1, crossover + mutation = 3.
+			
+			offspring_one.created_by = offspring_one.created_by + 2;
+			
+			// If this offspring was only mutated, that is, it was not crossed then get its parent fitness.
+			// It it was crossed before being mutated then offspring_one.created would equal 3.
+			
+			if ( offspring_one.created_by === 2 )
+			{
+			
+				offspring_one.parent_fitness = deep_copy( this.population[ parent_one_index ].fitness );
+				
+			}
+			
+		}
+		
+		if ( mutated_two ) // If truly mutated.
+		{
+		
+			offspring_two.created_by = offspring_two.created_by + 2;
+
+			// If this offspring was only mutated, that is, it was not crossed then get its parent fitness.
+			// It it was crossed before being mutated then offspring_two.created would equal 3.
+			
+			if ( offspring_two.created_by === 2 )
+			{
+			
+				offspring_two.parent_fitness = deep_copy( this.population[ parent_two_index ].fitness );
+				
+			}
+			
+		}
+		
+		// No parents->offspring not crossed and/or not mutated enter into the new population.
+		// Each offspring going into the new population must either crossed, mutated, or both.
+		
+		if ( offspring_one.created_by != 0 && offspring_two.created_by != 0 )
+		{
+			
+			return { one: offspring_one, two: offspring_two };
+			
 		}
 		else
 		{
 			
-			// Crossover didn't happen but try to mutate.
-			
-			function gaussian_distribution( mean, standard_deviation )
-			{
-				
-				// Two uniformally distributed random variable samples.
-				
-				var x1 = Math.random( );
-				var x2 = Math.random( );
-
-				// The method requires sampling from a uniform random of (0,1]
-				// but Math.random( ) returns a sample of [0,1).
-				
-				if ( x1 == 0.0 ) x1 = 1.0;
-				if ( x2 == 0.0 ) x2 = 1.0;
-				
-				// Box-Muller transformation for Z_0.
-
-				var y1 = Math.sqrt( -2.0 * Math.log( x1 ) ) * Math.cos( 2.0 * Math.PI * x2 );
-				
-				return ( y1 * standard_deviation ) + mean;
-				
-			}
-
-			offspring_one.genes = deep_copy( this.population[ parent_one_index ].genes );
-			offspring_two.genes = deep_copy( this.population[ parent_two_index ].genes );
-			
-			var mutated_one = false;
-			var mutated_two = false;
-			
-			for ( var i = 0; i < this.number_of_genes_per_genome; ++i )
-			{
-
-				// Mutate this gene by sampling a value from a normal distribution
-				// where the mean is the current gene value and the standard deviation
-				// the is mutation step = mutation probability in the range [0,1].
-				// A low mutation probability will give a mutated gene value close to the original gene 
-				// value (the mean) (most of the time) as the standard deviation is small and therefore the mutation step is small. 
-				// A high mutation probability will give (or it can easily) a mutated gene value farther from the original gene 
-				// value (the mean) as the standard deviation is large and therefore the mutation step is large. 
-				
-				// Note that gv = gv + σ*N(0,1) is the same as gv = N(gv,σ).
-
-				// Clamp the gene to range [-1,1].
-				
-				if ( get_random_float( 0.0, 1.0 ) <= this.mutation_probability ) // Mutate this gene?
-				{
-				
-					var temp_gene_value_one = deep_copy( offspring_one.genes[ i ] );
-					var temp_gene_value_two = deep_copy( offspring_two.genes[ i ] );
-					
-					offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );			
-					offspring_one.genes[ i ] = get_clamped_value( offspring_one.genes[ i ], -1.0, 1.0 );
-					
-					offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );			
-					offspring_two.genes[ i ] = get_clamped_value( offspring_two.genes[ i ], -1.0, 1.0 );
-					
-					// Test if it was truly mutated.
-					
-					if ( temp_gene_value_one != offspring_one.genes[ i ] )
-					{
-					
-						mutated_one = true;
-						
-					}
-					
-					if ( temp_gene_value_two != offspring_two.genes[ i ] )
-					{
-					
-						mutated_two = true;
-						
-					}
-					
-				}
-				
-			}
-			
-			if ( mutated_one && mutated_two ) // If truly mutated.
-			{
-			
-				offspring_one.created_by = offspring_one.created_by + 2;
-				offspring_two.created_by = offspring_two.created_by + 2;
-				
-				offspring_one.parent_fitness = deep_copy( this.population[ parent_one_index ].fitness );
-				offspring_two.parent_fitness = deep_copy( this.population[ parent_two_index ].fitness );
-				
-				return { one: offspring_one, two: offspring_two };
-				
-			}
-			else
-			{
-				
-				return 0;
-				
-			}
+			return 0;
 			
 		}
 
@@ -1076,6 +1046,8 @@ function Genetic_Algorithm( params )
 
 		this.elitism_operator( new_population );
 		
+		// Perform crossover and mutation separately?
+		
 		if ( !this.perform_crossover_and_mutation_sequentially )
 		{
 
@@ -1148,7 +1120,7 @@ function Genetic_Algorithm( params )
 			new_population = [ ];
 			
 		}
-		else
+		else // Perform crossover and mutation in sequence.
 		{
 			
 			// Now we enter the GA loop.
@@ -1363,6 +1335,15 @@ function Genetic_Algorithm( params )
 		return population_genes;
 		
 	}
+	
+	this.get_best_fitness = function ( )
+	{
+		
+		this.evaluate_population( );
+		
+		return deep_copy( this.best_fitness );
+		
+	}
 
 	this.get_average_fitness = function ( ) 
 	{
@@ -1372,13 +1353,13 @@ function Genetic_Algorithm( params )
 		return deep_copy( this.average_fitness );
 		
 	}
-
-	this.get_best_fitness = function ( )
+	
+	this.get_worst_fitness = function ( )
 	{
 		
 		this.evaluate_population( );
 		
-		return deep_copy( this.best_fitness );
+		return deep_copy( this.worst_fitness );
 		
 	}
 	

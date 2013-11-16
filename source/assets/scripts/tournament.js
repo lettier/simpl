@@ -19,15 +19,24 @@ var pause        = false;
 var show_debug   = false;
 var stop_tournament = false;
 
-var use_perfect_paddle = false;
+var use_neural_network_paddle = false;
+var use_perfect_paddle        = true;
+var use_random_paddle         = false;
 
 var top_wall    = new Static_Object( "top_wall"    );
 var right_wall  = new Static_Object( "right_wall"  );
 var bottom_wall = new Static_Object( "bottom_wall" );
 var left_wall   = new Static_Object( "left_wall"   );
 
-var paddle_path = document.getElementById( "paddle_path" );
+var ball_slot   = document.getElementById( "ball_slot" );
 var paddle_slot = document.getElementById( "paddle_slot" );
+
+var ball_reset_center   = { x: ball_slot.offsetLeft   + ( ( ball_slot.offsetWidth    || ball_slot.clientWidth    ) / 2 ),
+	                       y: ball_slot.offsetTop    + ( ( ball_slot.offsetHeight   || ball_slot.clientHeight   ) / 2 )  };
+var paddle_reset_center = { x: paddle_slot.offsetLeft + ( ( paddle_slot.offsetWidth  || paddle_slot.clientWidth  ) / 2 ),
+	                       y: paddle_slot.offsetTop  + ( ( paddle_slot.offsetHeight || paddle_slot.clientHeight ) / 2 )  };
+
+var paddle_path = document.getElementById( "paddle_path" );
 var ball_in_paddle_path_color     = "rgba( 200, 255, 136, .2 )";
 var ball_not_in_paddle_path_color = "rgba( 255,  98,  98, .2 )";
 var padddle_path_background_color = ball_in_paddle_path_color;
@@ -262,17 +271,17 @@ draw( );
 function reset( )
 {
 	
-	random_angle = random_angle_range.min + ( random_angle_range.max - random_angle_range.min ) * Math.random( );	
-	ball.dynamic_object.set_center( document.getElementById( "ball_slot" ).offsetLeft, document.getElementById( "ball_slot" ).offsetTop );
+	random_angle = random_angle_range.min + ( random_angle_range.max - random_angle_range.min ) * Math.random( );
+	ball.dynamic_object.set_center( ball_reset_center.x, ball_reset_center.y );
 	ball.set_magnitude( starting_ball_magnitude );
-	ball.set_angle( random_angle );
-	
-	paddle.dynamic_object.set_center( paddle_slot.offsetLeft, paddle_slot.offsetTop );
+	ball.set_angle( random_angle );	
+		
+	paddle.dynamic_object.set_center( paddle_reset_center.x, paddle_reset_center.y );
 	paddle.set_magnitude( starting_ball_magnitude );
 	paddle.set_angle( starting_paddle_angle );
 
 	take_control = false;	
-	pause = false;
+	pause        = false;
 	
 }
 
@@ -429,7 +438,7 @@ function handle_neural_network_ouput( )
 
 	debug_manager.add_or_update( "NN Output", learner.neural_net_output );
 	
-	if ( !use_perfect_paddle )
+	if ( use_neural_network_paddle )
 	{	
 	
 		if ( learner.neural_net_output[ 0 ] < 0.0 )
@@ -472,23 +481,80 @@ function handle_neural_network_ouput( )
 	else if ( use_perfect_paddle )
 	{
 		
+		/*
+		
 		var difference = paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y;
+		
+		debug_manager.add_or_update( "Perfect Output", difference );
 		
 		if ( difference < 0 )
 		{
 			
-			paddle.set_magnitude( -1 * difference * 10 );
+			paddle.set_magnitude( 10.0 * ( -1 * difference ) );
 			
 			paddle.set_angle( 270 );
 			
-		}			
-		else if ( difference >= 0 )
+		}
+		else if ( difference == 0.0 )
 		{
 			
-			paddle.set_magnitude( difference * 10  );
+			paddle.set_magnitude( 0.0 );
+			
+			paddle.set_angle( starting_paddle_angle );
+			
+		}			
+		else if ( difference > 0 )
+		{
+			
+			paddle.set_magnitude( 10.0 * difference );
 			
 			paddle.set_angle( 90.0 );
 			
+		}
+		
+		*/
+		
+		paddle.set_magnitude( 0.0 );
+			
+		paddle.set_angle( starting_paddle_angle );
+		
+		var ball_center   = ball.dynamic_object.get_center( );
+		
+		var paddle_center = paddle.dynamic_object.get_center( );
+		
+		paddle.dynamic_object.set_center( paddle_center.x, ball_center.y );
+		
+	}
+	else if ( use_random_paddle )
+	{
+		
+		var random_float = get_random_float( -1, 1 );
+		
+		debug_manager.add_or_update( "Random Output", random_float );
+		
+		if ( random_float < 0.0 )
+		{
+		     
+			paddle.set_magnitude( starting_paddle_magnitude * ( -1 * random_float ) );
+       	
+			paddle.set_angle( 270.0 );			
+		  
+		}
+		else if ( random_float == 0.0 )
+		{
+			
+			paddle.set_magnitude( 0.0 );
+       	
+			paddle.set_angle( starting_paddle_angle );
+			
+		}
+		else if ( random_float > 0.0 )
+		{
+		     
+			paddle.set_magnitude( starting_paddle_magnitude * random_float );
+       	
+			paddle.set_angle( 90.0 );
+       
 		}
 		
 	}

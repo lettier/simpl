@@ -20,7 +20,11 @@
 	
 	$mutation_probability  = floatval( mysql_real_escape_string( $_POST[ 'mutation_probability' ] ) );
 	
+	$best_fitness    = 0;
+	
 	$average_fitness = 0;
+	
+	$worst_fitness   = 0;
 	
 	$fitness         = 0;
 	
@@ -31,9 +35,13 @@
 	if ( $action === "record" )
 	{
 	
+		$best_fitness    = floatval( mysql_real_escape_string( $_POST[ 'best_fitness' ] ) );
+		
 		$average_fitness = floatval( mysql_real_escape_string( $_POST[ 'average_fitness' ] ) );
 		
-		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_AVGS` ( `id`, `generation_number`, `average_fitness`, `crossover_probability`, `mutation_probability` ) VALUES ( NULL, $generation_number, $average_fitness, $crossover_probability, $mutation_probability );" ); 
+		$worst_fitness   = floatval( mysql_real_escape_string( $_POST[ 'worst_fitness' ] ) );
+		
+		$result = mysql_query( "INSERT INTO `lettier0`.`SIMPL_EXP_AVGS` ( `id`, `generation_number`, `best_fitness`, `average_fitness`, `worst_fitness`, `crossover_probability`, `mutation_probability` ) VALUES ( NULL, $generation_number, $best_fitness, $average_fitness, $worst_fitness, $crossover_probability, $mutation_probability );" ); 
 			
 		if ( $result )
 		{
