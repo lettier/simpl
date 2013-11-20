@@ -120,6 +120,10 @@ function Genetic_Algorithm( params )
 	// Generation number.
 	
 	this.generation_number = 0;
+
+	// Current population makeup of randoms, crossovers, mutants, crossover mutants, elites.
+
+	this.population_makeup = "";
 	
 	// Initialize population with genomes consisting of random
 	// genes and all fitness's set to zero.
@@ -457,7 +461,7 @@ function Genetic_Algorithm( params )
 				
 				offspring.parent_fitness = parent_one_contribution + parent_two_contribution;
 				
-				offspring.created_by = 1;		
+				offspring.created_by = 1;
 				
 				return offspring;
 				
@@ -596,11 +600,8 @@ function Genetic_Algorithm( params )
 		
 		// First attempts crossover and then attempts mutation.
 		
-		var offspring_one = new Genome( );
-		var offspring_two = new Genome( );
-		
-		offspring_one.genes = [ ];
-		offspring_two.genes = [ ];
+		var offspring_one = deep_copy( this.population[ parent_one_index ] );
+		var offspring_two = deep_copy( this.population[ parent_one_index ] );
 		
 		offspring_one.fitness = 0.0;
 		offspring_two.fitness = 0.0;
@@ -612,13 +613,16 @@ function Genetic_Algorithm( params )
 		offspring_two.created_by = 0;
 		
 		// Attempt crossover.
+
+		var crossover_point = get_random_integer( 0, ( this.number_of_genes_per_genome - 1 ) );
 		
-		if ( ( get_random_float( 0.0, 1.0 ) <= this.crossover_probability ) && ( parent_one_index != parent_two_index ) )
+		if ( ( get_random_float( 0.0, 1.0 ) <= this.crossover_probability ) && ( parent_one_index != parent_two_index ) && ( crossover_point != 0 ) )
 		{
-			
-			var crossover_point = get_random_integer( 1, ( this.number_of_genes_per_genome - 1 ) );
 
 			// Cross the parent's genes in the offspring.
+
+			offspring_one.genes = [ ];
+			offspring_two.genes = [ ];
 			
 			for ( var i = 0; i < crossover_point; ++i )
 			{
@@ -635,34 +639,18 @@ function Genetic_Algorithm( params )
 				offspring_two.genes.push( deep_copy( this.population[ parent_one_index ].genes[ i ] ) );
 				
 			}
+
+			var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
+			var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );	
 			
-			// Test for true crossover. It should have happened even for at least one gene.
+			offspring_one.parent_fitness = parent_one_contribution + parent_two_contribution;
+			offspring_one.created_by = offspring_one.created_by + 1;
+
+			parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
+			parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );	
 			
-			if ( ( offspring_one.genes.toString( ) != this.population[ parent_one_index ].genes.toString( ) ) &&
-				( offspring_one.genes.toString( ) != this.population[ parent_two_index ].genes.toString( ) ) )
-			{
-				
-				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
-				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );	
-				
-				offspring_one.parent_fitness = parent_one_contribution + parent_two_contribution;
-				
-				offspring_one.created_by = offspring_one.created_by + 1;				
-				
-			}
-			
-			if ( ( offspring_two.genes.toString( ) != this.population[ parent_one_index ].genes.toString( ) ) &&
-				( offspring_two.genes.toString( ) != this.population[ parent_two_index ].genes.toString( ) ) )
-			{
-				
-				var parent_two_contribution = ( this.population[ parent_two_index ].fitness * ( (                                   crossover_point ) / ( this.number_of_genes_per_genome ) ) );
-				var parent_one_contribution = ( this.population[ parent_one_index ].fitness * ( ( this.number_of_genes_per_genome - crossover_point ) / ( this.number_of_genes_per_genome ) ) );	
-				
-				offspring_two.parent_fitness = parent_one_contribution + parent_two_contribution;
-				
-				offspring_two.created_by = offspring_two.created_by + 1;				
-				
-			}						
+			offspring_two.parent_fitness = parent_two_contribution + parent_one_contribution;
+			offspring_two.created_by = offspring_two.created_by + 1;
 		
 		}
 			
@@ -692,20 +680,6 @@ function Genetic_Algorithm( params )
 			
 		}
 		
-		if ( offspring_one.created_by === 0 ) // Not crossed (should be 1 if false)? Get parent's genes.
-		{
-
-			offspring_one.genes = deep_copy( this.population[ parent_one_index ].genes );
-			
-		}
-		
-		if ( offspring_two.created_by === 0 ) // Not crossed (should be 1 if false)? Get parent's genes.
-		{
-			
-			offspring_two.genes = deep_copy( this.population[ parent_two_index ].genes );
-			
-		}
-		
 		// Attempt to mutate offspring one.
 		
 		var mutated_one = false;		
@@ -730,7 +704,9 @@ function Genetic_Algorithm( params )
 			
 				var temp_gene_value_one = deep_copy( offspring_one.genes[ i ] );
 				
-				offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );			
+				// offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );
+				// offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], 0.5 );
+				offspring_one.genes[ i ] = offspring_one.genes[ i ] + ( get_random_float( -1.0, 1.0 ) * .3 );
 				offspring_one.genes[ i ] = get_clamped_value( offspring_one.genes[ i ], -1.0, 1.0 );
 				
 				// Test if it was truly mutated.
@@ -739,9 +715,9 @@ function Genetic_Algorithm( params )
 				{
 				
 					mutated_one = true;
-					
-				}
 				
+				}
+			
 			}
 			
 		}
@@ -770,7 +746,9 @@ function Genetic_Algorithm( params )
 			
 				var temp_gene_value_two = deep_copy( offspring_two.genes[ i ] );
 				
-				offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );			
+				// offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );
+				// offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], 0.5 );
+				offspring_two.genes[ i ] = offspring_two.genes[ i ] + ( get_random_float( -1.0, 1.0 ) * .3 );
 				offspring_two.genes[ i ] = get_clamped_value( offspring_two.genes[ i ], -1.0, 1.0 );
 				
 				// Test if it was truly mutated.
@@ -825,16 +803,22 @@ function Genetic_Algorithm( params )
 		// No parents->offspring not crossed and/or not mutated enter into the new population.
 		// Each offspring going into the new population must either crossed, mutated, or both.
 		
-		if ( offspring_one.created_by != 0 && offspring_two.created_by != 0 )
+		if ( ( offspring_one.created_by === 0 ) || ( offspring_two.created_by === 0 ) )
 		{
 			
-			return { one: offspring_one, two: offspring_two };
+			return 0;
+			
+		}
+		else if ( ( offspring_one.genes.toString( ) === this.population[ parent_one_index ].genes.toString( ) ) || ( offspring_two.genes.toString( ) === this.population[ parent_two_index ].genes.toString( ) ) )
+		{
+			
+			return 0;
 			
 		}
 		else
 		{
 			
-			return 0;
+			return { one: offspring_one, two: offspring_two };
 			
 		}
 
@@ -904,6 +888,55 @@ function Genetic_Algorithm( params )
 		this.weakest_genome_index  = -1;
 		
 	}
+
+	this.compute_population_makeup = function ( )
+	{
+
+		var randoms           = 0;
+		var crossovers        = 0;
+		var mutants           = 0;
+		var crossover_mutants = 0;
+		var elites            = 0;
+
+		for ( var i = 0; i < this.population_size; ++i )
+		{
+			
+			if ( this.population[ i ].created_by === 0 )
+			{
+
+				randoms = randoms + 1;
+
+			}
+			else if ( this.population[ i ].created_by === 1 )
+			{
+			
+				crossovers = crossovers + 1;
+
+			}
+			else if ( this.population[ i ].created_by === 2 )
+			{
+			
+				mutants = mutants + 1;
+
+			}
+			else if ( this.population[ i ].created_by === 3 )
+			{
+			
+				crossover_mutants = crossover_mutants + 1;
+
+			}
+			else if ( this.population[ i ].created_by === 4 )
+			{
+			
+				elites = elites + 1;
+
+			}
+		
+		}
+
+		this.population_makeup = randoms + " " + crossovers + " " + mutants + " " + crossover_mutants + " " + elites;
+
+	}
 	
 	this.adjust_crossover_and_mutation_probabilities = function ( )
 	{
@@ -923,7 +956,7 @@ function Genetic_Algorithm( params )
 		for ( var i = 0; i < this.population_size; ++i )
 		{
 			
-			if ( this.population[ i ].created_by == 1 ) // Created by crossover.
+			if ( this.population[ i ].created_by === 1 ) // Created by crossover.
 			{
 				
 				crossover_operator_progress_sum += ( this.population[ i ].fitness - this.population[ i ].parent_fitness );
@@ -931,7 +964,7 @@ function Genetic_Algorithm( params )
 				number_of_crossovers += 1;
 				
 			}
-			else if ( this.population[ i ].created_by == 2 ) // Created by mutation.
+			else if ( this.population[ i ].created_by === 2 ) // Created by mutation.
 			{
 				
 				mutation_operator_progress_sum  += ( this.population[ i ].fitness - this.population[ i ].parent_fitness );

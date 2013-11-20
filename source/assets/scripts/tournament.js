@@ -19,8 +19,8 @@ var pause        = false;
 var show_debug   = false;
 var stop_tournament = false;
 
-var use_neural_network_paddle = false;
-var use_perfect_paddle        = true;
+var use_neural_network_paddle = true;
+var use_perfect_paddle        = false;
 var use_random_paddle         = false;
 
 var top_wall    = new Static_Object( "top_wall"    );

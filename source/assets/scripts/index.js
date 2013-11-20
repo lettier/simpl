@@ -16,8 +16,8 @@ var take_control = false;
 var pause        = true;
 var show_debug   = false;
 
-var use_neural_network_paddle = false;
-var use_perfect_paddle        = true;
+var use_neural_network_paddle = true;
+var use_perfect_paddle        = false;
 var use_random_paddle         = false;
 
 var run_experiment = true;
@@ -31,9 +31,9 @@ var left_wall   = new Static_Object( "left_wall"   );
 var ball_slot   = document.getElementById( "ball_slot" );
 var paddle_slot = document.getElementById( "paddle_slot" );
 
-var ball_reset_center   = { x: ball_slot.offsetLeft   + ( ( ball_slot.offsetWidth    || ball_slot.clientWidth    ) / 2 ),
+var ball_reset_center   = { x: ball_slot.offsetLeft      + ( ( ball_slot.offsetWidth    || ball_slot.clientWidth    ) / 2 ),
 	                       y: ball_slot.offsetTop    + ( ( ball_slot.offsetHeight   || ball_slot.clientHeight   ) / 2 )  };
-var paddle_reset_center = { x: paddle_slot.offsetLeft + ( ( paddle_slot.offsetWidth  || paddle_slot.clientWidth  ) / 2 ),
+var paddle_reset_center = { x: paddle_slot.offsetLeft    + ( ( paddle_slot.offsetWidth  || paddle_slot.clientWidth  ) / 2 ),
 	                       y: paddle_slot.offsetTop  + ( ( paddle_slot.offsetHeight || paddle_slot.clientHeight ) / 2 )  };
 
 var paddle_path = document.getElementById( "paddle_path" );
@@ -75,12 +75,12 @@ var genetic_algorithm_parameters = {
 	
 	popSize:                              10,
 	nGenesPerGenome:                    null,
-	useRankFitness:                     true,
-	useSelfAdaptation:                  true,
-	pCrMuSeq:                          false,
-	iCProb:                              0.0,
-	iMProb:                              0.0,
-	nElite:                               10
+	useRankFitness:                    false,
+	useSelfAdaptation:                 false,
+	pCrMuSeq:                           true,
+	iCProb:                              0.7,
+	iMProb:                              0.1,
+	nElite:                                2
 	
 };
 
@@ -438,6 +438,8 @@ function handle_neural_network_ouput( )
 		
 	}
 	
+	/* Commented out for rerun of experiment one.
+	
 	// To help with fitness testing, keep track of if the ball
 	// is in the path of the paddle.
 	// 1 for in the path of the ball.
@@ -486,6 +488,12 @@ function handle_neural_network_ouput( )
 		paddle_path.style.background = ball_not_in_paddle_path_color;
 		
 	}
+	
+	*/
+	
+	// Experiment one tracking.
+	
+	learner.current_genome_fitness_tracking.push( Math.abs( paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y ) ); 
 	
 	// Get input values for the neural network.
 	
@@ -651,6 +659,165 @@ function handle_neural_network_ouput( )
 	
 }
 
+// Experiment one fitness function.
+
+function handle_genome_evaluation( )
+{	
+	
+	pause = true;
+	
+	var fitness = 0.0;
+	
+	for( var i = 0; i < learner.current_genome_fitness_tracking.length - 1; ++i )
+	{
+		
+		if ( learner.current_genome_fitness_tracking[ i ] < learner.current_genome_fitness_tracking[ i + 1 ] )
+		{
+		
+			fitness = fitness - 0.1;
+		
+		}
+		else if ( learner.current_genome_fitness_tracking[ i ] == learner.current_genome_fitness_tracking[ i + 1 ] )
+		{
+		
+			if ( learner.current_genome_fitness_tracking[ i ] == 0 && learner.current_genome_fitness_tracking[ i + 1 ] == 0 )
+			{
+			
+				fitness = fitness + 0.1;
+				
+			}
+			else
+			{
+			
+				fitness = fitness - 0.1;
+				
+			}
+		
+		}
+		else if ( learner.current_genome_fitness_tracking[ i ] > learner.current_genome_fitness_tracking[ i + 1 ] )
+		{
+		
+			fitness = fitness + 0.1;
+		
+		}
+		
+	}
+	
+	learner.current_genome_fitness_tracking = [ ];
+	
+	fitness = fitness + ( 1 * learner.current_genome_paddle_hits );
+	
+	learner.current_genome_paddle_hits = 0;
+	
+	if ( fitness < 0.0 ) fitness = 0.0;
+
+	debug_manager.add_or_update( "Last Genome Fitness", fitness );
+
+	learner.genetic_algorithm.set_genome_fitness( learner.current_genome_being_evalutated, fitness );
+	
+	if ( ( learner.current_genome_being_evalutated + 1 ) == learner.genetic_algorithm.get_population_size( ) )
+	{
+
+		// Evaluated all the genomes in the population.
+		// Calculate population metrics.
+		// Adjust crossover and mutation probabilities if using self-adaptation.		
+		
+		learner.genetic_algorithm.sort_population( );
+		
+		learner.genetic_algorithm.evaluate_population( );
+		
+		if ( learner.parameters.genetic_algorithm.useSelfAdaptation )
+		{
+			
+			learner.genetic_algorithm.adjust_crossover_and_mutation_probabilities( );
+			
+		}
+		
+		// Package up this population and send it to the database if its generation number is higher than
+		// the highest generation number already in the database.
+		
+		var data_string  = "generation_number="           + learner.genetic_algorithm.get_generation_number( );
+		data_string     += "&best_fitness="               + learner.genetic_algorithm.get_best_fitness( );
+		data_string     += "&average_fitness="            + learner.genetic_algorithm.get_average_fitness( );
+		data_string     += "&worst_fitness="              + learner.genetic_algorithm.get_worst_fitness( );
+		data_string     += "&population_size="            + learner.genetic_algorithm.get_population_size( );
+		data_string     += "&number_of_genes_per_genome=" + learner.genetic_algorithm.get_number_of_genes_per_genome( );
+		data_string     += "&crossover_probability="      + learner.genetic_algorithm.get_crossover_probability( );
+		data_string     += "&mutation_probability="       + learner.genetic_algorithm.get_mutation_probability( );
+		data_string     += "&population_genes="           + learner.genetic_algorithm.get_population_genes_flattened( );
+		
+		database_manager.send_and_receive( "assets/scripts/store_genomes.php", data_string, database_manager, "adding_genome_population" );
+		
+		if ( run_experiment )
+		{	
+		
+			// Experiment of first 100 generations.
+
+			if ( learner.genetic_algorithm.get_generation_number( ) < 100 )
+			{
+			
+				var experiment_record_data_string  = "action=record";
+				experiment_record_data_string     += "&generation_number="        + learner.genetic_algorithm.get_generation_number( );
+				experiment_record_data_string     += "&best_fitness="             + learner.genetic_algorithm.get_best_fitness( );
+				experiment_record_data_string     += "&average_fitness="          + learner.genetic_algorithm.get_average_fitness( );
+				experiment_record_data_string     += "&worst_fitness="            + learner.genetic_algorithm.get_worst_fitness( );
+				experiment_record_data_string     += "&crossover_probability="    + learner.genetic_algorithm.get_crossover_probability( );
+				experiment_record_data_string     += "&mutation_probability="     + learner.genetic_algorithm.get_mutation_probability( );			
+				
+				database_manager.send_and_receive( "assets/scripts/experiment.php", experiment_record_data_string, database_manager, "experiment_record" );
+				
+				if ( ( learner.genetic_algorithm.get_generation_number( ) + 1 ) % 10 == 0 )
+				{
+				
+					var experiment_store_data_string  = "action=store";
+					experiment_store_data_string     += "&generation_number="        + learner.genetic_algorithm.get_generation_number( );
+					experiment_store_data_string     += "&fitness="                  + learner.genetic_algorithm.get_genome_fitness( learner.genetic_algorithm.get_fittest_genome_index( ) ); 
+					experiment_store_data_string     += "&crossover_probability="    + learner.genetic_algorithm.get_crossover_probability( ); 
+					experiment_store_data_string     += "&mutation_probability="     + learner.genetic_algorithm.get_mutation_probability( ); 
+					experiment_store_data_string     += "&genes="                    + learner.genetic_algorithm.get_genome_genes_flattened( learner.genetic_algorithm.get_fittest_genome_index( ) ); 
+				
+					database_manager.send_and_receive( "assets/scripts/experiment.php", experiment_store_data_string, database_manager, "experiment_store" );
+					
+				}
+				
+			}
+			
+		}
+		
+		// Generate a new generation.
+		
+		learner.genetic_algorithm.generate_new_generation( );
+
+		// Get the makeup of the population.
+
+		learner.genetic_algorithm.compute_population_makeup( );
+		
+		// Load in the first genome's genes.
+		
+		learner.current_genome_being_evalutated = 0;
+		
+		learner.neural_net.put_weights( learner.genetic_algorithm.get_genome_genes( learner.current_genome_being_evalutated ) );
+		
+	}
+	else
+	{
+		
+		// Test the next genome in the population.
+		
+		learner.current_genome_being_evalutated += 1;
+		
+		learner.neural_net.put_weights( learner.genetic_algorithm.get_genome_genes( learner.current_genome_being_evalutated ) );
+		
+	}	
+	
+	learner.evaluate_current_genome = false;
+	
+	reset( );
+	
+}
+
+/* Commented out for the rerun of experiment one.
+
 function handle_genome_evaluation( )
 {	
 	
@@ -744,7 +911,11 @@ function handle_genome_evaluation( )
 		
 		// Generate a new generation.
 		
-		learner.genetic_algorithm.generate_new_generation( );		
+		learner.genetic_algorithm.generate_new_generation( );
+
+		// Get the makeup of the population.
+
+		learner.genetic_algorithm.compute_population_makeup( );
 		
 		// Load in the first genome's genes.
 		
@@ -770,6 +941,8 @@ function handle_genome_evaluation( )
 	
 }
 
+*/
+
 var ball_magnitude_reduction_threshold = 100;
 var ball_magnitude_reduce_by_percentage = .5;
 
@@ -787,6 +960,8 @@ function collision_handler( colliding_objects )
 		{
 
 			ball.set_magnitude( ( ball.get_magnitude( ) - ( ball.get_magnitude( ) * ball_magnitude_reduce_by_percentage ) ) > ball_magnitude_reduction_threshold ? ( ball.get_magnitude( ) - ( ball.get_magnitude( ) * .1 ) ) : 0 ); 
+			
+			learner.current_genome_paddle_hits = learner.current_genome_paddle_hits + 1;
 			
 			if ( ball.get_magnitude( ) == 0 )
 			{
