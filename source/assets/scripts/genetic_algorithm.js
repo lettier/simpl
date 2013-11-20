@@ -704,9 +704,9 @@ function Genetic_Algorithm( params )
 			
 				var temp_gene_value_one = deep_copy( offspring_one.genes[ i ] );
 				
-				// offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );
+				offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], this.mutation_probability );
 				// offspring_one.genes[ i ] = gaussian_distribution( offspring_one.genes[ i ], 0.5 );
-				offspring_one.genes[ i ] = offspring_one.genes[ i ] + ( get_random_float( -1.0, 1.0 ) * .3 );
+				// offspring_one.genes[ i ] = offspring_one.genes[ i ] + ( get_random_float( -1.0, 1.0 ) * .3 );
 				offspring_one.genes[ i ] = get_clamped_value( offspring_one.genes[ i ], -1.0, 1.0 );
 				
 				// Test if it was truly mutated.
@@ -746,9 +746,9 @@ function Genetic_Algorithm( params )
 			
 				var temp_gene_value_two = deep_copy( offspring_two.genes[ i ] );
 				
-				// offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );
+				offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], this.mutation_probability );
 				// offspring_two.genes[ i ] = gaussian_distribution( offspring_two.genes[ i ], 0.5 );
-				offspring_two.genes[ i ] = offspring_two.genes[ i ] + ( get_random_float( -1.0, 1.0 ) * .3 );
+				// offspring_two.genes[ i ] = offspring_two.genes[ i ] + ( get_random_float( -1.0, 1.0 ) * .3 );
 				offspring_two.genes[ i ] = get_clamped_value( offspring_two.genes[ i ], -1.0, 1.0 );
 				
 				// Test if it was truly mutated.

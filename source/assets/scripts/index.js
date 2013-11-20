@@ -75,11 +75,11 @@ var genetic_algorithm_parameters = {
 	
 	popSize:                              10,
 	nGenesPerGenome:                    null,
-	useRankFitness:                    false,
-	useSelfAdaptation:                 false,
-	pCrMuSeq:                           true,
-	iCProb:                              0.7,
-	iMProb:                              0.1,
+	useRankFitness:                     true,
+	useSelfAdaptation:                  true,
+	pCrMuSeq:                          false,
+	iCProb:                              0.8,
+	iMProb:                              0.2,
 	nElite:                                2
 	
 };
@@ -438,8 +438,6 @@ function handle_neural_network_ouput( )
 		
 	}
 	
-	/* Commented out for rerun of experiment one.
-	
 	// To help with fitness testing, keep track of if the ball
 	// is in the path of the paddle.
 	// 1 for in the path of the ball.
@@ -489,11 +487,13 @@ function handle_neural_network_ouput( )
 		
 	}
 	
-	*/
+	/*
 	
 	// Experiment one tracking.
 	
-	learner.current_genome_fitness_tracking.push( Math.abs( paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y ) ); 
+	learner.current_genome_fitness_tracking.push( Math.abs( paddle.dynamic_object.get_center( ).y - ball.dynamic_object.get_center( ).y ) );
+	
+	*/
 	
 	// Get input values for the neural network.
 	
@@ -659,7 +659,7 @@ function handle_neural_network_ouput( )
 	
 }
 
-// Experiment one fitness function.
+/* Experiment one fitness function.
 
 function handle_genome_evaluation( )
 {	
@@ -816,7 +816,7 @@ function handle_genome_evaluation( )
 	
 }
 
-/* Commented out for the rerun of experiment one.
+*/
 
 function handle_genome_evaluation( )
 {	
@@ -940,8 +940,6 @@ function handle_genome_evaluation( )
 	reset( );
 	
 }
-
-*/
 
 var ball_magnitude_reduction_threshold = 100;
 var ball_magnitude_reduce_by_percentage = .5;
