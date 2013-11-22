@@ -9,6 +9,8 @@
 function Dynamic_Object( id )
 {
 	
+	this.is_dynamic_object = true;
+	
 	this.id = id;
 	
 	this.object = document.getElementById( this.id );
@@ -107,14 +109,14 @@ function Dynamic_Object( id )
 	this.get_center = function ( )
 	{
 		
-		this.center.x = this.get_left( ) + ( this.get_width( ) / 2 );
+		this.center.x = this.get_left( ) + ( this.get_width( )  / 2 );
 		
-		this.center.y = this.get_top( ) + ( this.get_height( ) / 2 );
+		this.center.y = this.get_top( )  + ( this.get_height( ) / 2 );
 		
 		return this.center;
 		
-	}	
-	
+	}
+		
 	this.get_distance_to = function ( object )
 	{
 		
@@ -145,6 +147,58 @@ function Dynamic_Object( id )
 			var h = Math.sqrt( ( x * x ) + ( y * y ) );
 			
 			return { x: x, y: y, h: h };
+			
+		}
+		
+	}
+	
+	this.set_left_top = function ( left, top )
+	{
+		
+		if ( left == undefined || top == undefined ) { console.log( "[Dynamic_Object:set_left_top] left and/or top is not set." ); return null; }
+		
+		this.object.style.left = left + "px";
+		
+		this.object.style.top  = top + "px";
+		
+		this.get_top( );
+		
+		this.get_left( );
+		
+		this.get_right( );
+		
+		this.get_bottom( );
+		
+		this.get_center( );
+		
+		if ( this.number_of_attached_objects > 0 )
+		{
+			
+			for ( var i = 0; i < this.number_of_attached_objects; ++i )
+			{
+				
+				if ( this.attached_objects[ i ][ 1 ] == "l" )
+				{
+					
+					this.attached_objects[ i ][ 0 ].style.left = this.object.offsetLeft + "px";
+					
+				}
+				else if ( this.attached_objects[ i ][ 1 ] == "t" )
+				{
+					
+					this.attached_objects[ i ][ 0 ].style.top  = this.object.offsetTop  + "px";
+					
+				}
+				else if ( this.attached_objects[ i ][ 1 ] == "" )
+				{
+
+					this.attached_objects[ i ][ 0 ].style.left = this.object.offsetLeft + "px";
+				
+					this.attached_objects[ i ][ 0 ].style.top  = this.object.offsetTop  + "px";
+					
+				}
+				
+			}
 			
 		}
 		
@@ -202,12 +256,12 @@ function Dynamic_Object( id )
 		
 	}
 	
-	this.move_center = function ( dx, dy )
+	this.move_left_top = function ( dx, dy )
 	{
 		
 		this.object.style.left = this.object.offsetLeft + dx + "px";
 		
-		this.object.style.top  = this.object.offsetTop  + dy + "px";	
+		this.object.style.top  = this.object.offsetTop  + dy + "px";
 		
 		this.get_top( );
 		

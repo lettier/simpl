@@ -27,7 +27,6 @@ var right_wall  = new Static_Object( "right_wall"  );
 var bottom_wall = new Static_Object( "bottom_wall" );
 var left_wall   = new Static_Object( "left_wall"   );
 
-
 var ball_slot   = document.getElementById( "ball_slot" );
 var paddle_slot = document.getElementById( "paddle_slot" );
 
@@ -49,11 +48,13 @@ var starting_ball_magnitude   = starting_magnitude;
 var starting_paddle_magnitude = starting_magnitude;
 var starting_paddle_angle = 90.0;
 
-var ball   = new Physics_Object(  new Dynamic_Object( "ball" ), random_angle, starting_ball_magnitude   );
+var ball   = new Physics_Object(  new Dynamic_Object( "ball" ), random_angle, starting_ball_magnitude );
 
 var paddle = new Physics_Object(  new Dynamic_Object( "paddle", [ paddle_path, "t" ] ), starting_paddle_angle, starting_paddle_magnitude );
 
 var physics_engine = new Physics_Engine( collision_handler, paddle, ball, top_wall, right_wall, bottom_wall, left_wall );
+
+var time_delta = 0.0;
 
 var fps_monitor = new FPS_Monitor( );
 
@@ -196,7 +197,7 @@ function draw( time_stamp )
 	
 	request_animation_id = window.requestAnimationFrame( draw );
 	
-	var time_delta = fps_monitor.get_time_delta( time_stamp );
+	time_delta = fps_monitor.get_time_delta( time_stamp );
 	
 	if ( !pause )
 	{
@@ -406,7 +407,7 @@ function handle_mouse_move( mevent )
 	if ( ( mevent.clientY - ( paddle.dynamic_object.get_height( ) / 2 ) ) >= ( window.innerHeight - paddle.dynamic_object.get_height( ) ) ) 
 	{ 
 		
-		paddle.dynamic_object.set_center( paddle.dynamic_object.get_left( ), window.innerHeight - paddle.dynamic_object.get_height( ) );
+		paddle.dynamic_object.set_left_top( paddle.dynamic_object.get_left( ), window.innerHeight - paddle.dynamic_object.get_height( ) );
 		
 		return null;
 		
@@ -414,13 +415,13 @@ function handle_mouse_move( mevent )
 	else if ( ( mevent.clientY - ( paddle.dynamic_object.get_height( ) / 2 ) ) <= 0 )
 	{ 
 		
-		paddle.dynamic_object.set_center( paddle.dynamic_object.get_left( ), 0 );
+		paddle.dynamic_object.set_left_top( paddle.dynamic_object.get_left( ), 0 );
 		
 		return null;
 		
 	}
 	
-	paddle.dynamic_object.set_center( paddle.dynamic_object.get_left( ), mevent.clientY - ( paddle.dynamic_object.get_height( ) / 2 ) );
+	paddle.dynamic_object.set_left_top( paddle.dynamic_object.get_left( ), mevent.clientY - ( paddle.dynamic_object.get_height( ) / 2 ) );
 	
 }
 
@@ -975,13 +976,20 @@ function collision_handler( colliding_objects )
 
 			var reverse_angle = ball.mod_degrees( ( ball.get_angle( ) + 180 ) );			
 			var dx =  5 * Math.cos( ball.degrees_to_radians( reverse_angle ) );			
-			var dy = -5 * Math.sin( ball.degrees_to_radians( reverse_angle ) ); // Negative one because of the mirrored coordinate system. 			
+			var dy = -5 * Math.sin( ball.degrees_to_radians( reverse_angle ) ); // Negative one because of the mirrored coordinate system.
+			
+			/*
+			
 			while ( physics_engine.rectangle_intersection( paddle.dynamic_object, ball.dynamic_object ) )
 			{
 				
-				ball.dynamic_object.move_center( dx, dy );
+				console.log( "x" );
+				
+				ball.dynamic_object.move_left_top( dx, dy );
 				
 			}
+			
+			*/
 			
 			// There are two cases:
 			// 	1. The ball hits the paddle from the top or bottom.
@@ -1044,7 +1052,7 @@ function collision_handler( colliding_objects )
 			}
 			
 			
-			ball.dynamic_object.move_center( 0, ( -1 * ball.dynamic_object.get_top( ) ) + 1 );
+			ball.dynamic_object.move_left_top( 0, ( -1 * ball.dynamic_object.get_top( ) ) + 1 );
 			
 			// Physics_Object.set_angle expects an angle as if y+ was going UP the screen.
 			// So say the ball hits the top wall at 35 degrees. The angle of incidence would be 35 degrees and so the ball should be reflected back
@@ -1073,7 +1081,7 @@ function collision_handler( colliding_objects )
 				
 			}			
 			
-			ball.dynamic_object.move_center( ( -1 * ( ball.dynamic_object.get_right( ) - window.innerWidth ) ) -1, 0 ); 
+			ball.dynamic_object.move_left_top( ( -1 * ( ball.dynamic_object.get_right( ) - window.innerWidth ) ) -1, 0 ); 
 			
 			var reflection_angle = -1 * ( ball.get_angle( ) - 180.0);
 			ball.set_angle( reflection_angle );
@@ -1091,7 +1099,7 @@ function collision_handler( colliding_objects )
 				
 			}			
 			
-			ball.dynamic_object.move_center( 0, ( -1 * ( ball.dynamic_object.get_bottom( ) - window.innerHeight ) ) -1 );
+			ball.dynamic_object.move_left_top( 0, ( -1 * ( ball.dynamic_object.get_bottom( ) - window.innerHeight ) ) -1 );
 			
 			var reflection_angle = ball.mod_degrees( -1 * ball.get_angle( ) );			
 			ball.set_angle( reflection_angle );
@@ -1104,7 +1112,7 @@ function collision_handler( colliding_objects )
 			
 			learner.evaluate_current_genome = true;
 			
-			ball.dynamic_object.move_center( ( -1 * ( ball.dynamic_object.get_left( ) ) ) + 1, 0 ); 
+			ball.dynamic_object.move_left_top( ( -1 * ( ball.dynamic_object.get_left( ) ) ) + 1, 0 ); 
 			
 			var reflection_angle = -1 * ( ball.get_angle( ) - 180.0);
 			ball.set_angle( reflection_angle );
@@ -1116,13 +1124,13 @@ function collision_handler( colliding_objects )
 		if ( colliding_objects[ i ][ 0 ].id == "paddle" && colliding_objects[ i ][ 1 ].id == "top_wall" || ( colliding_objects[ i ][ 0 ].id == "top_wall" && colliding_objects[ i ][ 1 ].id == "paddle" ) )
 		{
 			
-			paddle.dynamic_object.move_center( 0, ( -1 * paddle.dynamic_object.get_top( ) ) + 1 );
+			paddle.dynamic_object.move_left_top( 0, ( -1 * paddle.dynamic_object.get_top( ) ) + 1 );
 			
 		}
 		else if ( colliding_objects[ i ][ 0 ].id == "paddle" && colliding_objects[ i ][ 1 ].id == "bottom_wall" || ( colliding_objects[ i ][ 0 ].id == "bottom_wall" && colliding_objects[ i ][ 1 ].id == "paddle" ) )
 		{
 			
-			paddle.dynamic_object.move_center( 0, ( -1 * ( paddle.dynamic_object.get_bottom( ) - window.innerHeight ) ) -1 );
+			paddle.dynamic_object.move_left_top( 0, ( -1 * ( paddle.dynamic_object.get_bottom( ) - window.innerHeight ) ) -1 );
 			
 		}			
 		
