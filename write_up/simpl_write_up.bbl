@@ -1,10 +1,28 @@
 \begin{thebibliography}{1}
 
+\bibitem{neuralnetworks}
+Mat Buckland.
+\newblock Neural networks in plain english.
+\newblock \url{http://www.ai-junkie.com/ann/evolved/nnt1.html}, September 2013.
+
 \bibitem{predictive_models}
 Heinz M\"{u}hlenbein and Dirk Schlierkamp-Voosen.
 \newblock Predictive models for the breeder genetic algorithm i. continuous
   parameter optimization.
 \newblock {\em Evol. Comput.}, 1(1):25--49, March 1993.
+
+\bibitem{genselect}
+Marek Obitko.
+\newblock Selection: Introduction to genetic algorithms.
+\newblock
+  \url{http://www.obitko.com/tutorials/genetic-algorithms/selection.php}, 1998.
+
+\bibitem{geneticalgorithm}
+Hartmut Pohlheim.
+\newblock Genetic and evolutionary algorithms: Principles, methods and
+  algorithms.
+\newblock \url{http://www.pg.gda.pl/~mkwies/dyd/geadocu/algindex.html}, May
+  1997.
 
 \bibitem{self_adapt}
 Wen-Yung~Lee Wen-Yang~Lin and Tzung-Pei Hong.

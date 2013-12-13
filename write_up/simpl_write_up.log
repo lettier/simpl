@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.4.20)  20 NOV 2013 04:05
+This is pdfTeX, Version 3.1415926-2.5-1.40.13 (TeX Live 2013/dev) (format=pdflatex 2013.4.20)  13 DEC 2013 15:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -418,21 +418,147 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 )
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
+
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package hobsub Info: Skipping package `ifvtex' (already loaded).
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package hobsub Info: Skipping package `ifpdf' (already loaded).
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen124
+\Hy@linkcounter=\count105
+\Hy@pagecounter=\count106
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+\Hy@SavedSpaceFactor=\count107
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing OFF on input line 4463.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4688.
+\c@Hy@tempcnt=\count108
+
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip11
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen125
+\Fld@menulength=\count109
+\Field@Width=\dimen126
+\Fld@charsize=\dimen127
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing OFF on input line 6310.
+Package hyperref Info: Link coloring OFF on input line 6315.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
+\Hy@abspage=\count110
+\c@Item=\count111
+\c@Hfootnote=\count112
+)
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
+\Fld@listcount=\count113
+\c@bookmark@seq@number=\count114
+
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip49
+)
+(/usr/share/texlive/texmf-dist/tex/latex/rotating/rotating.sty
+Package: rotating 2009/03/28 v2.16a rotated objects in LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count115
+\rotFPtop=\skip50
+\rotFPbot=\skip51
+\rot@float@box=\box30
+\rot@mess@toks=\toks28
+)
 (./simpl_write_up.aux)
 \openout1 = `simpl_write_up.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -470,52 +596,23 @@ LaTeX Font Info:    ... okay on input line 39.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count105
-\scratchdimen=\dimen124
-\scratchbox=\box30
-\nofMPsegments=\count106
-\nofMParguments=\count107
-\everyMPshowfont=\toks28
-\MPscratchCnt=\count108
-\MPscratchDim=\dimen125
-\MPnumerator=\count109
-\makeMPintoPDFobject=\count110
-\everyMPtoPDFconversion=\toks29
-) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
-Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
-)
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty
-Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-)
-Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-)
-(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+\scratchcounter=\count116
+\scratchdimen=\dimen128
+\scratchbox=\box31
+\nofMPsegments=\count117
+\nofMParguments=\count118
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count119
+\MPscratchDim=\dimen129
+\MPnumerator=\count120
+\makeMPintoPDFobject=\count121
+\everyMPtoPDFconversion=\toks30
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
 
 (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/grfext.sty
 Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
-Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-))
-(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
-Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/etexcmds.sty
-Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
-)))
+)
 Package grfext Info: Graphics extension search list:
 (grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
 G,.JBIG2,.JB2,.eps]
@@ -525,316 +622,341 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 40.
+\AtBeginShipoutBox=\box32
+Package hyperref Info: Link coloring OFF on input line 64.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count122
+)
+LaTeX Info: Redefining \ref on input line 64.
+LaTeX Info: Redefining \pageref on input line 64.
+LaTeX Info: Redefining \nameref on input line 64.
+
+(./simpl_write_up.out) (./simpl_write_up.out)
+\@outlinefile=\write3
+\openout3 = `simpl_write_up.out'.
+
+LaTeX Font Info:    Try loading font information for U+msa on input line 67.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 40.
+LaTeX Font Info:    Try loading font information for U+msb on input line 67.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<figures/arena.png, id=1, 1927.2pt x 1057.9525pt>
+<figures/arena.png, id=129, 1927.2pt x 1057.9525pt>
 File: figures/arena.png Graphic file (type png)
  <use figures/arena.png>
-Package pdftex.def Info: figures/arena.png used on input line 58.
+Package pdftex.def Info: figures/arena.png used on input line 88.
 (pdftex.def)             Requested size: 407.66833pt x 223.79088pt.
 
 [1
 
-{/usr/share/texlive/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures/arena.
-png>] <figures/ball.png, id=15, 546.04pt x 430.60875pt>
+{/usr/share/texlive/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+<figures/ball.png, id=146, 546.04pt x 430.60875pt>
 File: figures/ball.png Graphic file (type png)
-
-<use figures/ball.png>
-Package pdftex.def Info: figures/ball.png used on input line 69.
+ <use figures/ball.png>
+Package pdftex.def Info: figures/ball.png used on input line 99.
 (pdftex.def)             Requested size: 317.07614pt x 250.0489pt.
- <figures/angle.png, id=16, 583.17876pt x 462.72874pt>
+
+<figures/angle.png, id=148, 583.17876pt x 462.72874pt>
 File: figures/angle.png Graphic file (type png)
-
-<use figures/angle.png>
-Package pdftex.def Info: figures/angle.png used on input line 78.
+ <use figures/angle.png>
+Package pdftex.def Info: figures/angle.png used on input line 108.
 (pdftex.def)             Requested size: 226.48395pt x 179.70093pt.
- [2 <./figures/ball.png> <./figures/angle.png>]
-<figures/paddle.png, id=29, 227.85126pt x 716.6775pt>
+
+[2 <./figures/arena.png> <./figures/ball.png>] [3 <./figures/angle.png>]
+<figures/paddle.png, id=171, 227.85126pt x 716.6775pt>
 File: figures/paddle.png Graphic file (type png)
- <use figures/paddle.png>
-Package pdftex.def Info: figures/paddle.png used on input line 93.
+
+<use figures/paddle.png>
+Package pdftex.def Info: figures/paddle.png used on input line 123.
 (pdftex.def)             Requested size: 135.89174pt x 427.43996pt.
-
-[3 <./figures/paddle.png>] <figures/nn.png, id=34, 1189.44376pt x 776.9025pt>
+ [4 <./figures/paddle.png>]
+<figures/nn.png, id=180, 1189.44376pt x 776.9025pt>
 File: figures/nn.png Graphic file (type png)
-
-<use figures/nn.png>
-Package pdftex.def Info: figures/nn.png used on input line 112.
+ <use figures/nn.png>
+Package pdftex.def Info: figures/nn.png used on input line 142.
 (pdftex.def)             Requested size: 452.9679pt x 295.8543pt.
- [4 <./figures/nn.png>]
-<figures/unit_vectors.png, id=42, 1927.2pt x 995.72pt>
+
+[5 <./figures/nn.png>] <figures/unit_vectors.png, id=193, 1927.2pt x 995.72pt>
 File: figures/unit_vectors.png Graphic file (type png)
 
 <use figures/unit_vectors.png>
-Package pdftex.def Info: figures/unit_vectors.png used on input line 121.
+Package pdftex.def Info: figures/unit_vectors.png used on input line 151.
 (pdftex.def)             Requested size: 452.9679pt x 234.02461pt.
 
-<figures/nn_input.png, id=43, 813.0375pt x 601.24625pt>
+<figures/nn_input.png, id=194, 813.0375pt x 601.24625pt>
 File: figures/nn_input.png Graphic file (type png)
 
 <use figures/nn_input.png>
-Package pdftex.def Info: figures/nn_input.png used on input line 128.
+Package pdftex.def Info: figures/nn_input.png used on input line 158.
 (pdftex.def)             Requested size: 407.66833pt x 301.46642pt.
- [5 <./figures/unit_vectors.png> <./figures/nn_input.png>] [6] [7]
-Overfull \hbox (55.80592pt too wide) in paragraph at lines 237--258
-[] [] 
- []
-
-[8] [9] <figures/simple_fit_func.png, id=68, 1084.05pt x 602.25pt>
+ [6 <./figures/unit_vectors.png> <./figures/nn_input.png>] [7] [8] [9] [10] [11
+]
+<figures/simple_fit_func.png, id=243, 1084.05pt x 602.25pt>
 File: figures/simple_fit_func.png Graphic file (type png)
 
 <use figures/simple_fit_func.png>
-Package pdftex.def Info: figures/simple_fit_func.png used on input line 310.
+Package pdftex.def Info: figures/simple_fit_func.png used on input line 341.
 (pdftex.def)             Requested size: 203.83417pt x 113.23404pt.
- [10 <./figures/simple_fit_func.png>]
-<figures/roulette.png, id=73, 1607.00375pt x 764.8575pt>
+
+<figures/roulette.png, id=247, 1607.00375pt x 764.8575pt>
 File: figures/roulette.png Graphic file (type png)
 
 <use figures/roulette.png>
-Package pdftex.def Info: figures/roulette.png used on input line 321.
+Package pdftex.def Info: figures/roulette.png used on input line 352.
 (pdftex.def)             Requested size: 407.66833pt x 194.02655pt.
- [11 <./figures/roulette.png>] [12]
-Overfull \hbox (11.48247pt too wide) detected at line 397
+ [12 <./figures/simple_fit_func.png>] [13 <./figures/roulette.png>] [14]
+Overfull \hbox (11.48247pt too wide) detected at line 428
 []
  []
 
-[13] [14] [15] [16]
-<figures/exp1_avg_fit.png, id=94, 1327.20844pt x 746.03719pt>
+[15] [16] [17] [18]
+<figures/exp1_avg_fit.png, id=300, 1327.20844pt x 746.03719pt>
 File: figures/exp1_avg_fit.png Graphic file (type png)
 
 <use figures/exp1_avg_fit.png>
-Package pdftex.def Info: figures/exp1_avg_fit.png used on input line 577.
+Package pdftex.def Info: figures/exp1_avg_fit.png used on input line 614.
 (pdftex.def)             Requested size: 452.9679pt x 254.61688pt.
-
-<figures/exp1_10_tops.png, id=95, 1099.85907pt x 618.81187pt>
+ [19]
+<figures/exp1_10_tops.png, id=308, 1099.85907pt x 618.81187pt>
 File: figures/exp1_10_tops.png Graphic file (type png)
 
 <use figures/exp1_10_tops.png>
-Package pdftex.def Info: figures/exp1_10_tops.png used on input line 584.
+Package pdftex.def Info: figures/exp1_10_tops.png used on input line 621.
 (pdftex.def)             Requested size: 452.9679pt x 254.84758pt.
- [17 <./figures/exp1_avg_fit.png (PNG copy)>]
-<figures/exp1_10_tops_times.png, id=99, 1206.75844pt x 679.03688pt>
+
+<figures/exp1_10_tops_times.png, id=309, 1206.75844pt x 679.03688pt>
 File: figures/exp1_10_tops_times.png Graphic file (type png)
 
 <use figures/exp1_10_tops_times.png>
-Package pdftex.def Info: figures/exp1_10_tops_times.png used on input line 591.
+Package pdftex.def Info: figures/exp1_10_tops_times.png used on input line 628.
 
 (pdftex.def)             Requested size: 452.9679pt x 254.87651pt.
-
-<figures/exp2_avg_fit.png, id=100, 1191.7022pt x 707.64375pt>
+ [20 <./figures/exp1_avg_fit.png (PNG copy)> <./figures/exp1_10_tops.png (PNG c
+opy)>]
+<figures/exp2_avg_fit.png, id=317, 1191.7022pt x 707.64375pt>
 File: figures/exp2_avg_fit.png Graphic file (type png)
 
 <use figures/exp2_avg_fit.png>
-Package pdftex.def Info: figures/exp2_avg_fit.png used on input line 600.
+Package pdftex.def Info: figures/exp2_avg_fit.png used on input line 639.
 (pdftex.def)             Requested size: 452.9679pt x 268.9722pt.
- [18 <./figures/exp1_10_tops.png (PNG copy)> <./figures/exp1_10_tops_times.png 
-(PNG copy)>]
-<figures/exp2_10_tops.png, id=104, 975.645pt x 548.80031pt>
+ [21 <./figures/exp1_10_tops_times.png (PNG copy)>] <figures/exp2_10_tops.png, 
+id=325, 975.645pt x 548.80031pt>
 File: figures/exp2_10_tops.png Graphic file (type png)
 
 <use figures/exp2_10_tops.png>
-Package pdftex.def Info: figures/exp2_10_tops.png used on input line 607.
+Package pdftex.def Info: figures/exp2_10_tops.png used on input line 646.
 (pdftex.def)             Requested size: 452.9679pt x 254.79591pt.
 
-<figures/exp2_10_tops_times.png, id=105, 1206.00563pt x 678.28406pt>
+<figures/exp2_10_tops_times.png, id=326, 1206.00563pt x 678.28406pt>
 File: figures/exp2_10_tops_times.png Graphic file (type png)
 
 <use figures/exp2_10_tops_times.png>
-Package pdftex.def Info: figures/exp2_10_tops_times.png used on input line 614.
+Package pdftex.def Info: figures/exp2_10_tops_times.png used on input line 653.
 
 (pdftex.def)             Requested size: 452.9679pt x 254.75954pt.
- [19 <./figures/exp2_avg_fit.png (PNG copy)> <./figures/exp2_10_tops.png (PNG c
+ [22 <./figures/exp2_avg_fit.png (PNG copy)> <./figures/exp2_10_tops.png (PNG c
 opy)>]
-<figures/exp3_avg_fit.png, id=110, 1187.18532pt x 516.42938pt>
+<figures/exp3_avg_fit.png, id=335, 1187.18532pt x 516.42938pt>
 File: figures/exp3_avg_fit.png Graphic file (type png)
 
 <use figures/exp3_avg_fit.png>
-Package pdftex.def Info: figures/exp3_avg_fit.png used on input line 623.
+Package pdftex.def Info: figures/exp3_avg_fit.png used on input line 664.
 (pdftex.def)             Requested size: 452.9679pt x 197.04109pt.
-
-<figures/exp3_self_adapt.png, id=111, 1188.69093pt x 538.26094pt>
+ [23 <./figures/exp2_10_tops_times.png (PNG copy)> <./figures/exp3_avg_fit.png 
+(PNG copy)>]
+<figures/exp3_self_adapt.png, id=345, 1188.69093pt x 538.26094pt>
 File: figures/exp3_self_adapt.png Graphic file (type png)
 
 <use figures/exp3_self_adapt.png>
-Package pdftex.def Info: figures/exp3_self_adapt.png used on input line 632.
+Package pdftex.def Info: figures/exp3_self_adapt.png used on input line 673.
 (pdftex.def)             Requested size: 452.9679pt x 205.10799pt.
- [20 <./figures/exp2_10_tops_times.png (PNG copy)> <./figures/exp3_avg_fit.png 
-(PNG copy)>]
-<figures/exp3_10_tops.png, id=115, 1109.64563pt x 693.34032pt>
+
+<figures/exp3_10_tops.png, id=346, 1109.64563pt x 693.34032pt>
 File: figures/exp3_10_tops.png Graphic file (type png)
 
 <use figures/exp3_10_tops.png>
-Package pdftex.def Info: figures/exp3_10_tops.png used on input line 639.
+Package pdftex.def Info: figures/exp3_10_tops.png used on input line 680.
 (pdftex.def)             Requested size: 452.9679pt x 283.02298pt.
 
-<figures/exp3_10_tops_times.png, id=116, 1186.4325pt x 722.7pt>
+<figures/exp3_10_tops_times.png, id=347, 1186.4325pt x 722.7pt>
 File: figures/exp3_10_tops_times.png Graphic file (type png)
 
 <use figures/exp3_10_tops_times.png>
-Package pdftex.def Info: figures/exp3_10_tops_times.png used on input line 646.
+Package pdftex.def Info: figures/exp3_10_tops_times.png used on input line 687.
 
 (pdftex.def)             Requested size: 452.9679pt x 275.91907pt.
- [21 <./figures/exp3_self_adapt.png (PNG copy)> <./figures/exp3_10_tops.png (PN
+ [24 <./figures/exp3_self_adapt.png (PNG copy)> <./figures/exp3_10_tops.png (PN
 G copy)>]
-<figures/exp4_avg_fit.png, id=120, 1228.59pt x 546.54187pt>
+<figures/exp4_avg_fit.png, id=355, 1228.59pt x 546.54187pt>
 File: figures/exp4_avg_fit.png Graphic file (type png)
 
 <use figures/exp4_avg_fit.png>
-Package pdftex.def Info: figures/exp4_avg_fit.png used on input line 655.
+Package pdftex.def Info: figures/exp4_avg_fit.png used on input line 698.
 (pdftex.def)             Requested size: 452.9679pt x 201.50012pt.
 
-<figures/exp4_10_tops.png, id=121, 1157.07281pt x 648.92438pt>
+<figures/exp4_10_tops.png, id=356, 1157.07281pt x 648.92438pt>
 File: figures/exp4_10_tops.png Graphic file (type png)
 
 <use figures/exp4_10_tops.png>
-Package pdftex.def Info: figures/exp4_10_tops.png used on input line 662.
+Package pdftex.def Info: figures/exp4_10_tops.png used on input line 705.
 (pdftex.def)             Requested size: 452.9679pt x 254.03996pt.
- [22 <./figures/exp3_10_tops_times.png (PNG copy)> <./figures/exp4_avg_fit.png 
+ [25 <./figures/exp3_10_tops_times.png (PNG copy)> <./figures/exp4_avg_fit.png 
 (PNG copy)>]
-<figures/exp4_10_tops_times.png, id=125, 1211.27531pt x 735.49782pt>
+<figures/exp4_10_tops_times.png, id=364, 1211.27531pt x 735.49782pt>
 File: figures/exp4_10_tops_times.png Graphic file (type png)
 
 <use figures/exp4_10_tops_times.png>
-Package pdftex.def Info: figures/exp4_10_tops_times.png used on input line 669.
+Package pdftex.def Info: figures/exp4_10_tops_times.png used on input line 712.
 
 (pdftex.def)             Requested size: 452.9679pt x 275.04785pt.
 
-<figures/exp5_avg_fit.png, id=126, 1117.17375pt x 532.99126pt>
+<figures/exp5_avg_fit.png, id=367, 1117.17375pt x 532.99126pt>
 File: figures/exp5_avg_fit.png Graphic file (type png)
 
 <use figures/exp5_avg_fit.png>
-Package pdftex.def Info: figures/exp5_avg_fit.png used on input line 678.
+Package pdftex.def Info: figures/exp5_avg_fit.png used on input line 723.
 (pdftex.def)             Requested size: 452.9679pt x 216.10426pt.
- [23 <./figures/exp4_10_tops.png (PNG copy)> <./figures/exp4_10_tops_times.png 
+ [26 <./figures/exp4_10_tops.png (PNG copy)> <./figures/exp4_10_tops_times.png 
 (PNG copy)>]
-<figures/exp5_10_tops.png, id=130, 1293.33188pt x 645.91313pt>
+<figures/exp5_10_tops.png, id=375, 1293.33188pt x 645.91313pt>
 File: figures/exp5_10_tops.png Graphic file (type png)
 
 <use figures/exp5_10_tops.png>
-Package pdftex.def Info: figures/exp5_10_tops.png used on input line 685.
+Package pdftex.def Info: figures/exp5_10_tops.png used on input line 730.
 (pdftex.def)             Requested size: 452.9679pt x 226.22083pt.
 
-<figures/exp5_10_tops_times.png, id=131, 1131.47719pt x 595.47469pt>
+<figures/exp5_10_tops_times.png, id=376, 1131.47719pt x 595.47469pt>
 File: figures/exp5_10_tops_times.png Graphic file (type png)
 
 <use figures/exp5_10_tops_times.png>
-Package pdftex.def Info: figures/exp5_10_tops_times.png used on input line 692.
+Package pdftex.def Info: figures/exp5_10_tops_times.png used on input line 737.
 
 (pdftex.def)             Requested size: 452.9679pt x 238.38554pt.
- [24 <./figures/exp5_avg_fit.png (PNG copy)> <./figures/exp5_10_tops.png (PNG c
+ [27 <./figures/exp5_avg_fit.png (PNG copy)> <./figures/exp5_10_tops.png (PNG c
 opy)>]
-<figures/exp6_avg_fit.png, id=135, 1114.1625pt x 576.65437pt>
+<figures/exp6_avg_fit.png, id=384, 1114.1625pt x 576.65437pt>
 File: figures/exp6_avg_fit.png Graphic file (type png)
 
 <use figures/exp6_avg_fit.png>
-Package pdftex.def Info: figures/exp6_avg_fit.png used on input line 701.
+Package pdftex.def Info: figures/exp6_avg_fit.png used on input line 748.
 (pdftex.def)             Requested size: 452.9679pt x 234.44124pt.
 
-<figures/exp6_10_tops.png, id=136, 999.735pt x 533.74406pt>
+<figures/exp6_10_tops.png, id=385, 999.735pt x 533.74406pt>
 File: figures/exp6_10_tops.png Graphic file (type png)
 
 <use figures/exp6_10_tops.png>
-Package pdftex.def Info: figures/exp6_10_tops.png used on input line 708.
+Package pdftex.def Info: figures/exp6_10_tops.png used on input line 755.
 (pdftex.def)             Requested size: 452.9679pt x 241.83589pt.
- [25 <./figures/exp5_10_tops_times.png (PNG copy)> <./figures/exp6_avg_fit.png 
+ [28 <./figures/exp5_10_tops_times.png (PNG copy)> <./figures/exp6_avg_fit.png 
 (PNG copy)>]
-<figures/exp6_10_tops_times.png, id=141, 994.46532pt x 521.69907pt>
+<figures/exp6_10_tops_times.png, id=392, 994.46532pt x 521.69907pt>
 File: figures/exp6_10_tops_times.png Graphic file (type png)
 
 <use figures/exp6_10_tops_times.png>
-Package pdftex.def Info: figures/exp6_10_tops_times.png used on input line 715.
+Package pdftex.def Info: figures/exp6_10_tops_times.png used on input line 762.
 
 (pdftex.def)             Requested size: 452.9679pt x 237.62817pt.
 
-<figures/exp7_avg_fit.png, id=142, 1447.65843pt x 784.43062pt>
+<figures/exp7_avg_fit.png, id=395, 1447.65843pt x 784.43062pt>
 File: figures/exp7_avg_fit.png Graphic file (type png)
 
 <use figures/exp7_avg_fit.png>
-Package pdftex.def Info: figures/exp7_avg_fit.png used on input line 724.
+Package pdftex.def Info: figures/exp7_avg_fit.png used on input line 773.
 (pdftex.def)             Requested size: 452.9679pt x 245.44516pt.
- [26 <./figures/exp6_10_tops.png (PNG copy)> <./figures/exp6_10_tops_times.png 
+ [29 <./figures/exp6_10_tops.png (PNG copy)> <./figures/exp6_10_tops_times.png 
 (PNG copy)>]
-<figures/exp7_10_tops.png, id=146, 1038.12843pt x 544.28343pt>
+<figures/exp7_10_tops.png, id=403, 1038.12843pt x 544.28343pt>
 File: figures/exp7_10_tops.png Graphic file (type png)
 
 <use figures/exp7_10_tops.png>
-Package pdftex.def Info: figures/exp7_10_tops.png used on input line 731.
+Package pdftex.def Info: figures/exp7_10_tops.png used on input line 780.
 (pdftex.def)             Requested size: 452.9679pt x 237.48392pt.
 
-<figures/exp7_10_tops_times.png, id=147, 1123.94907pt x 587.94656pt>
+<figures/exp7_10_tops_times.png, id=404, 1123.94907pt x 587.94656pt>
 File: figures/exp7_10_tops_times.png Graphic file (type png)
 
 <use figures/exp7_10_tops_times.png>
-Package pdftex.def Info: figures/exp7_10_tops_times.png used on input line 738.
+Package pdftex.def Info: figures/exp7_10_tops_times.png used on input line 787.
 
 (pdftex.def)             Requested size: 452.9679pt x 236.95078pt.
- [27 <./figures/exp7_avg_fit.png (PNG copy)> <./figures/exp7_10_tops.png (PNG c
+ [30 <./figures/exp7_avg_fit.png (PNG copy)> <./figures/exp7_10_tops.png (PNG c
 opy)>]
-<figures/all_avg_fit.png, id=151, 1617.04124pt x 1146.2825pt>
+<figures/all_avg_fit.png, id=412, 1617.04124pt x 1146.2825pt>
 File: figures/all_avg_fit.png Graphic file (type png)
 
 <use figures/all_avg_fit.png>
-Package pdftex.def Info: figures/all_avg_fit.png used on input line 749.
+Package pdftex.def Info: figures/all_avg_fit.png used on input line 800.
 (pdftex.def)             Requested size: 452.9679pt x 321.09683pt.
-
-<figures/all_10_tops.png, id=152, 1602.98875pt x 1130.2225pt>
+ [31 <./figures/exp7_10_tops_times.png (PNG copy)>] <figures/all_10_tops.png, i
+d=420, 1602.98875pt x 1130.2225pt>
 File: figures/all_10_tops.png Graphic file (type png)
 
 <use figures/all_10_tops.png>
-Package pdftex.def Info: figures/all_10_tops.png used on input line 758.
+Package pdftex.def Info: figures/all_10_tops.png used on input line 809.
 (pdftex.def)             Requested size: 452.9679pt x 319.37468pt.
- [28 <./figures/exp7_10_tops_times.png (PNG copy)> <./figures/all_avg_fit.png>]
-
-<figures/all_10_tops_times.png, id=157, 1602.98875pt x 1130.2225pt>
+ [32 <./figures/all_avg_fit.png>]
+<figures/all_10_tops_times.png, id=426, 1602.98875pt x 1130.2225pt>
 File: figures/all_10_tops_times.png Graphic file (type png)
 
 <use figures/all_10_tops_times.png>
-Package pdftex.def Info: figures/all_10_tops_times.png used on input line 767.
+Package pdftex.def Info: figures/all_10_tops_times.png used on input line 818.
 (pdftex.def)             Requested size: 452.9679pt x 319.37468pt.
- [29 <./figures/all_10_tops.png>]
-(./simpl_write_up.bbl) [30 <./figures/all_10_tops_times.png>]
-(./simpl_write_up.aux) ) 
+ [33 <./figures/all_10_tops.png>]
+(./simpl_write_up.bbl [34 <./figures/all_10_tops_times.png>])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 878.
+ [35]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 878.
+
+(./simpl_write_up.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 878.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 878.
+Package rerunfilecheck Info: File `simpl_write_up.out' has not changed.
+(rerunfilecheck)             Checksum: 5647468EE6E01339FF6CB4C8D140DA1B;3390.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 878.
+ ) 
 Here is how much of TeX's memory you used:
- 3926 strings out of 495063
- 52971 string characters out of 3182194
- 126939 words of memory out of 3000000
- 6995 multiletter control sequences out of 15000+200000
- 12510 words of font info for 48 fonts, out of 3000000 for 9000
+ 7669 strings out of 495063
+ 109178 string characters out of 3182194
+ 216576 words of memory out of 3000000
+ 10588 multiletter control sequences out of 15000+200000
+ 12624 words of font info for 49 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 38i,15n,35p,2049b,233s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmti8.pfb>
-Output written on simpl_write_up.pdf (30 pages, 3121389 bytes).
+ 34i,16n,35p,2046b,434s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
+t10.pfb>
+Output written on simpl_write_up.pdf (35 pages, 3149814 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 134 compressed objects within 2 object streams
- 0 named destinations out of 1000 (max. 500000)
- 171 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 548 PDF objects out of 1000 (max. 8388607)
+ 438 compressed objects within 5 object streams
+ 118 named destinations out of 1000 (max. 500000)
+ 419 words of extra memory for PDF output out of 10000 (max. 10000000)
 

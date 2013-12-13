@@ -1,0 +1,31 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Implementation}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Arena}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Ball}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Paddle}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Physics Engine}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Neural Network}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.6}{Genetic Algorithm}{section.2}% 8
+\BOOKMARK [2][-]{subsection.2.7}{Database Manager}{section.2}% 9
+\BOOKMARK [1][-]{section.3}{Platform}{}% 10
+\BOOKMARK [1][-]{section.4}{Experimental Designs}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{Experiment one: use of a full and partial credit granting fitness function.}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{Experiment two: use of a simplified fitness function, use of rank fitness in selection, higher crossover probability, mutation probability based on the number of genes per genome, and a Gaussian distribution sample mutation step.}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.3}{Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.4}{Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.5}{Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.6}{Experiment six: fitness and ball-in-play upper bound.}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.7}{Experiment seven: random paddles.}{section.4}% 18
+\BOOKMARK [1][-]{section.5}{Experimental Results}{}% 19
+\BOOKMARK [2][-]{subsection.5.1}{Experiment one: use of a full and partial credit granting fitness function.}{section.5}% 20
+\BOOKMARK [2][-]{subsection.5.2}{Experiment two: use of a simplified fitness function, use of rank fitness in selection, higher crossover probability, mutation probability based on the number of genes per genome, and a Gaussian distribution sample mutation step.}{section.5}% 21
+\BOOKMARK [2][-]{subsection.5.3}{Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{section.5}% 22
+\BOOKMARK [2][-]{subsection.5.4}{Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{section.5}% 23
+\BOOKMARK [2][-]{subsection.5.5}{Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}{section.5}% 24
+\BOOKMARK [2][-]{subsection.5.6}{Experiment six: fitness and ball-in-play upper bound.}{section.5}% 25
+\BOOKMARK [2][-]{subsection.5.7}{Experiment seven: random paddles.}{section.5}% 26
+\BOOKMARK [2][-]{subsection.5.8}{Comparative Results}{section.5}% 27
+\BOOKMARK [3][-]{subsubsection.5.8.1}{Average fitness over 100 generations.}{subsection.5.8}% 28
+\BOOKMARK [3][-]{subsubsection.5.8.2}{Fitness of every 10th generation top performer.}{subsection.5.8}% 29
+\BOOKMARK [3][-]{subsubsection.5.8.3}{Average ball-in-play time \(in seconds\) of five rounds per every 10th generation top performer.}{subsection.5.8}% 30
+\BOOKMARK [1][-]{section.6}{Conclusion}{}% 31

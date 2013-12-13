@@ -1,129 +1,155 @@
 \relax 
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Implementation}{1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Arena}{1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Here you see the SimPL arena containing the paddle and ball.}}{1}}
-\newlabel{fig:arena}{{1}{1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Ball}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Here you see the ball's dynamic physics properties.}}{2}}
-\newlabel{fig:ball}{{2}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Here you see the ball's collision angle-of-incidence $\theta _i$ and its angle-of-reflection $\theta _r$.}}{2}}
-\newlabel{fig:angle}{{3}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Paddle}{3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Here you see the paddle's dynamic physics properties.}}{3}}
-\newlabel{fig:paddle}{{4}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Physics Engine}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Neural Network}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Here you see the neural network as constructed in SimPL.}}{4}}
-\newlabel{fig:nn}{{5}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Here you see the three input vectors to the neural network. Note that these vectors are normalized thereby turning them into unit vectors.}}{5}}
-\newlabel{fig:unit_vectors}{{6}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Here you see the normalized input to the neural network.}}{5}}
-\newlabel{fig:nn_input}{{7}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Genetic Algorithm}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Here you see the basic genetic algorithm.}}{6}}
-\newlabel{fig:ga}{{8}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Database Manager}{7}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Platform}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Laptop}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Designs}{8}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Here you see the genetic algorithm parameters used per experiment. The highlighted cells indicate the experimental variables per experiment. Experiment six and seven are included in the table for completeness but no evolution ever took place.}}{8}}
-\newlabel{tab:exps}{{1}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experiment one: use of a full and partial credit granting fitness function.}{9}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Here you see the genetic algorithm parameters for experiment one.}}{10}}
-\newlabel{tab:exp1}{{2}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Experiment two: use of a simplified fitness function, use of rank fitness in selection, higher crossover probability, mutation probability based on the number of genes per genome, and a Gaussian distribution sample mutation step.}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Here you see the simplified fitness function graphically where the paddle on the left is gaining fitness (as indicated by the green-hued bar) while the paddle on the right is gaining no fitness (as indicated by the purple-hued bar).}}{10}}
-\newlabel{fig:simple_fit_func}{{9}{10}}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Implementation}{1}{section.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Arena}{1}{subsection.2.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Here you see the SimPL arena containing the paddle and ball.}}{2}{figure.1}}
+\newlabel{fig:arena}{{1}{2}{Here you see the SimPL arena containing the paddle and ball}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Ball}{2}{subsection.2.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Here you see the ball's dynamic physics properties.}}{2}{figure.2}}
+\newlabel{fig:ball}{{2}{2}{Here you see the ball's dynamic physics properties}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Here you see the ball's collision angle-of-incidence $\theta _i$ and its angle-of-reflection $\theta _r$.}}{3}{figure.3}}
+\newlabel{fig:angle}{{3}{3}{Here you see the ball's collision angle-of-incidence $\theta _i$ and its angle-of-reflection $\theta _r$}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Paddle}{4}{subsection.2.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Here you see the paddle's dynamic physics properties.}}{4}{figure.4}}
+\newlabel{fig:paddle}{{4}{4}{Here you see the paddle's dynamic physics properties}{figure.4}{}}
+\citation{neuralnetworks}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Physics Engine}{5}{subsection.2.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Neural Network}{5}{subsection.2.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Here you see the neural network as constructed in SimPL.}}{5}{figure.5}}
+\newlabel{fig:nn}{{5}{5}{Here you see the neural network as constructed in SimPL}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Here you see the three input vectors to the neural network. Note that these vectors are normalized thereby turning them into unit vectors.}}{6}{figure.6}}
+\newlabel{fig:unit_vectors}{{6}{6}{Here you see the three input vectors to the neural network. Note that these vectors are normalized thereby turning them into unit vectors}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Here you see the normalized input to the neural network.}}{6}{figure.7}}
+\newlabel{fig:nn_input}{{7}{6}{Here you see the normalized input to the neural network}{figure.7}{}}
+\citation{neuralnetworks}
+\citation{geneticalgorithm}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Genetic Algorithm}{7}{subsection.2.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Here you see the basic genetic algorithm.}}{7}{figure.8}}
+\newlabel{fig:ga}{{8}{7}{Here you see the basic genetic algorithm}{figure.8}{}}
+\citation{self_adapt}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Database Manager}{8}{subsection.2.7}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Platform}{8}{section.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Designs}{9}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experiment one: use of a full and partial credit granting fitness function.}{9}{subsection.4.1}}
+\newlabel{RF1}{10}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Here you see the genetic algorithm parameters used per experiment. The highlighted cells indicate the experimental variables per experiment. Experiment six and seven are included in the table for completeness but no evolution ever took place.}}{10}{table.1}}
+\newlabel{tab:exps}{{1}{10}{Here you see the genetic algorithm parameters used per experiment. The highlighted cells indicate the experimental variables per experiment. Experiment six and seven are included in the table for completeness but no evolution ever took place}{table.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Here you see the genetic algorithm parameters for experiment one.}}{11}{table.2}}
+\newlabel{tab:exp1}{{2}{11}{Here you see the genetic algorithm parameters for experiment one}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Experiment two: use of a simplified fitness function, use of rank fitness in selection, higher crossover probability, mutation probability based on the number of genes per genome, and a Gaussian distribution sample mutation step.}{11}{subsection.4.2}}
+\citation{geneticalgorithm}
+\citation{genselect}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Here you see the simplified fitness function graphically where the paddle on the left is gaining fitness (as indicated by the green-hued bar) while the paddle on the right is gaining no fitness (as indicated by the purple-hued bar).}}{12}{figure.9}}
+\newlabel{fig:simple_fit_func}{{9}{12}{Here you see the simplified fitness function graphically where the paddle on the left is gaining fitness (as indicated by the green-hued bar) while the paddle on the right is gaining no fitness (as indicated by the purple-hued bar)}{figure.9}{}}
 \citation{predictive_models}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Here you see roulette selection using actual fitness versus rank fitness for a population of 10 genomes. On the left, the integers are the genomes' actual fitness and the percentages are their probabilities of being selected. On the right, the integers are the genomes' rank fitness and the percentages are the genomes' probabilities of being selected. Observe that Genome 10 no longer dominates the wheel when using its rank fitness ($10$) versus using its actual fitness ($100)$.}}{11}}
-\newlabel{fig:roulette}{{10}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Here you see roulette selection using actual fitness versus rank fitness for a population of 10 genomes. On the left, the integers are the genomes' actual fitness and the percentages are their probabilities of being selected. On the right, the integers are the genomes' rank fitness and the percentages are the genomes' probabilities of being selected. Observe that Genome 10 no longer dominates the wheel when using its rank fitness ($10$) versus using its actual fitness ($100)$.}}{13}{figure.10}}
+\newlabel{fig:roulette}{{10}{13}{Here you see roulette selection using actual fitness versus rank fitness for a population of 10 genomes. On the left, the integers are the genomes' actual fitness and the percentages are their probabilities of being selected. On the right, the integers are the genomes' rank fitness and the percentages are the genomes' probabilities of being selected. Observe that Genome 10 no longer dominates the wheel when using its rank fitness ($10$) versus using its actual fitness ($100)$}{figure.10}{}}
 \citation{self_adapt}
 \citation{self_adapt}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Here you see the genetic algorithm parameters for experiment two.}}{12}}
-\newlabel{tab:exp2}{{3}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Here you see the self-adaptation algorithm.}}{13}}
-\newlabel{fig:sa}{{11}{13}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Here you see the genetic algorithm parameters for experiment three.}}{14}}
-\newlabel{tab:exp3}{{4}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{14}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Here you see the genetic algorithm parameters for experiment four.}}{15}}
-\newlabel{tab:exp4}{{5}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}{15}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Here you see the genetic algorithm parameters for experiment five.}}{15}}
-\newlabel{tab:exp5}{{6}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Experiment six: fitness and ball-in-play upper bound.}{16}}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Here you see the genetic algorithm parameters for experiment six.}}{16}}
-\newlabel{tab:exp6}{{7}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Experiment seven: random paddles.}{16}}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Here you see the genetic algorithm parameters for experiment seven.}}{17}}
-\newlabel{tab:exp7}{{8}{17}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental Results}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experiment one: use of a full and partial credit granting fitness function.}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Here you see the average fitness over 100 generations for experiment one.}}{17}}
-\newlabel{fig:exp1_avg_fit}{{12}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment one.}}{18}}
-\newlabel{fig:exp1_10_tops}{{13}{18}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment one.}}{18}}
-\newlabel{fig:exp1_10_tops_times}{{14}{18}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Experiment two: use of a simplified fitness function, use of rank fitness in selection, higher crossover probability, mutation probability based on the number of genes per genome, and a Gaussian distribution sample mutation step.}{19}}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Here you see the average fitness over 100 generations for experiment two.}}{19}}
-\newlabel{fig:exp2_avg_fit}{{15}{19}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment two.}}{19}}
-\newlabel{fig:exp2_10_tops}{{16}{19}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Here you see the genetic algorithm parameters for experiment two.}}{14}{table.3}}
+\newlabel{tab:exp2}{{3}{14}{Here you see the genetic algorithm parameters for experiment two}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{14}{subsection.4.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Here you see the self-adaptation algorithm.}}{15}{figure.11}}
+\newlabel{fig:sa}{{11}{15}{Here you see the self-adaptation algorithm}{figure.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Here you see the genetic algorithm parameters for experiment three.}}{16}{table.4}}
+\newlabel{tab:exp3}{{4}{16}{Here you see the genetic algorithm parameters for experiment three}{table.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{16}{subsection.4.4}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Here you see the genetic algorithm parameters for experiment four.}}{17}{table.5}}
+\newlabel{tab:exp4}{{5}{17}{Here you see the genetic algorithm parameters for experiment four}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}{17}{subsection.4.5}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Here you see the genetic algorithm parameters for experiment five.}}{17}{table.6}}
+\newlabel{tab:exp5}{{6}{17}{Here you see the genetic algorithm parameters for experiment five}{table.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Experiment six: fitness and ball-in-play upper bound.}{17}{subsection.4.6}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Here you see the genetic algorithm parameters for experiment six.}}{18}{table.7}}
+\newlabel{tab:exp6}{{7}{18}{Here you see the genetic algorithm parameters for experiment six}{table.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Experiment seven: random paddles.}{18}{subsection.4.7}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Here you see the genetic algorithm parameters for experiment seven.}}{19}{table.8}}
+\newlabel{tab:exp7}{{8}{19}{Here you see the genetic algorithm parameters for experiment seven}{table.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental Results}{19}{section.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experiment one: use of a full and partial credit granting fitness function.}{19}{subsection.5.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Here you see the average fitness over 100 generations for experiment one.}}{20}{figure.12}}
+\newlabel{fig:exp1_avg_fit}{{12}{20}{Here you see the average fitness over 100 generations for experiment one}{figure.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment one.}}{20}{figure.13}}
+\newlabel{fig:exp1_10_tops}{{13}{20}{Here you see the fitness of every 10th generation top performer for experiment one}{figure.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment one.}}{21}{figure.14}}
+\newlabel{fig:exp1_10_tops_times}{{14}{21}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment one}{figure.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Experiment two: use of a simplified fitness function, use of rank fitness in selection, higher crossover probability, mutation probability based on the number of genes per genome, and a Gaussian distribution sample mutation step.}{21}{subsection.5.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Here you see the average fitness over 100 generations for experiment two.}}{22}{figure.15}}
+\newlabel{fig:exp2_avg_fit}{{15}{22}{Here you see the average fitness over 100 generations for experiment two}{figure.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment two.}}{22}{figure.16}}
+\newlabel{fig:exp2_10_tops}{{16}{22}{Here you see the fitness of every 10th generation top performer for experiment two}{figure.16}{}}
 \citation{self_adapt}
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment two.}}{20}}
-\newlabel{fig:exp2_10_tops_times}{{17}{20}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{20}}
-\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Here you see the average fitness over 100 generations for experiment three.}}{20}}
-\newlabel{fig:exp3_avg_fit}{{18}{20}}
-\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Here you see the self-adaptation of the crossover and mutation probabilities for experiment three.}}{21}}
-\newlabel{fig:exp3_self_adapt}{{19}{21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment three.}}{21}}
-\newlabel{fig:exp3_10_tops}{{20}{21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment three.}}{22}}
-\newlabel{fig:exp3_10_tops_times}{{21}{22}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Here you see the average fitness over 100 generations for experiment four.}}{22}}
-\newlabel{fig:exp4_avg_fit}{{22}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment four.}}{23}}
-\newlabel{fig:exp4_10_tops}{{23}{23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment four.}}{23}}
-\newlabel{fig:exp4_10_tops_times}{{24}{23}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}{24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Here you see the average fitness over 100 generations for experiment five.}}{24}}
-\newlabel{fig:exp5_avg_fit}{{25}{24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment five.}}{24}}
-\newlabel{fig:exp5_10_tops}{{26}{24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {27}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment five.}}{25}}
-\newlabel{fig:exp5_10_tops_times}{{27}{25}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Experiment six: fitness and ball-in-play upper bound.}{25}}
-\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces Here you see the average fitness over 100 generations for experiment six.}}{25}}
-\newlabel{fig:exp6_avg_fit}{{28}{25}}
-\@writefile{lof}{\contentsline {figure}{\numberline {29}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment six.}}{26}}
-\newlabel{fig:exp6_10_tops}{{29}{26}}
-\@writefile{lof}{\contentsline {figure}{\numberline {30}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment six.}}{26}}
-\newlabel{fig:exp6_10_tops_times}{{30}{26}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Experiment seven: random paddles.}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {31}{\ignorespaces Here you see the average fitness over 100 generations for experiment seven.}}{27}}
-\newlabel{fig:exp7_avg_fit}{{31}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {32}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment seven.}}{27}}
-\newlabel{fig:exp7_10_tops}{{32}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {33}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment seven.}}{28}}
-\newlabel{fig:exp7_10_tops_times}{{33}{28}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Comparative Analysis}{28}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Average fitness over 100 generations.}{28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {34}{\ignorespaces Here you see the average fitness over 100 generations for experiment one through seven.}}{28}}
-\newlabel{fig:all_avg_fit}{{34}{28}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Fitness of every 10th generation top performer.}{29}}
-\@writefile{lof}{\contentsline {figure}{\numberline {35}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment one through seven.}}{29}}
-\newlabel{fig:all_10_tops}{{35}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment two.}}{23}{figure.17}}
+\newlabel{fig:exp2_10_tops_times}{{17}{23}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment two}{figure.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Experiment three: self-adaptation of crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{23}{subsection.5.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Here you see the average fitness over 100 generations for experiment three.}}{23}{figure.18}}
+\newlabel{fig:exp3_avg_fit}{{18}{23}{Here you see the average fitness over 100 generations for experiment three}{figure.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Here you see the self-adaptation of the crossover and mutation probabilities for experiment three.}}{24}{figure.19}}
+\newlabel{fig:exp3_self_adapt}{{19}{24}{Here you see the self-adaptation of the crossover and mutation probabilities for experiment three}{figure.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment three.}}{24}{figure.20}}
+\newlabel{fig:exp3_10_tops}{{20}{24}{Here you see the fitness of every 10th generation top performer for experiment three}{figure.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment three.}}{25}{figure.21}}
+\newlabel{fig:exp3_10_tops_times}{{21}{25}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment three}{figure.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Experiment four: static crossover and mutation probabilities with the crossover and mutation operators working in parallel.}{25}{subsection.5.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Here you see the average fitness over 100 generations for experiment four.}}{25}{figure.22}}
+\newlabel{fig:exp4_avg_fit}{{22}{25}{Here you see the average fitness over 100 generations for experiment four}{figure.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment four.}}{26}{figure.23}}
+\newlabel{fig:exp4_10_tops}{{23}{26}{Here you see the fitness of every 10th generation top performer for experiment four}{figure.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment four.}}{26}{figure.24}}
+\newlabel{fig:exp4_10_tops_times}{{24}{26}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment four}{figure.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Experiment five: static crossover and mutation probabilities with the crossover and mutation operators working in sequence.}{26}{subsection.5.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Here you see the average fitness over 100 generations for experiment five.}}{27}{figure.25}}
+\newlabel{fig:exp5_avg_fit}{{25}{27}{Here you see the average fitness over 100 generations for experiment five}{figure.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment five.}}{27}{figure.26}}
+\newlabel{fig:exp5_10_tops}{{26}{27}{Here you see the fitness of every 10th generation top performer for experiment five}{figure.26}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {27}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment five.}}{28}{figure.27}}
+\newlabel{fig:exp5_10_tops_times}{{27}{28}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment five}{figure.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Experiment six: fitness and ball-in-play upper bound.}{28}{subsection.5.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces Here you see the average fitness over 100 generations for experiment six.}}{28}{figure.28}}
+\newlabel{fig:exp6_avg_fit}{{28}{28}{Here you see the average fitness over 100 generations for experiment six}{figure.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {29}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment six.}}{29}{figure.29}}
+\newlabel{fig:exp6_10_tops}{{29}{29}{Here you see the fitness of every 10th generation top performer for experiment six}{figure.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {30}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment six.}}{29}{figure.30}}
+\newlabel{fig:exp6_10_tops_times}{{30}{29}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment six}{figure.30}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Experiment seven: random paddles.}{29}{subsection.5.7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {31}{\ignorespaces Here you see the average fitness over 100 generations for experiment seven.}}{30}{figure.31}}
+\newlabel{fig:exp7_avg_fit}{{31}{30}{Here you see the average fitness over 100 generations for experiment seven}{figure.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {32}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiment seven.}}{30}{figure.32}}
+\newlabel{fig:exp7_10_tops}{{32}{30}{Here you see the fitness of every 10th generation top performer for experiment seven}{figure.32}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {33}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment seven.}}{31}{figure.33}}
+\newlabel{fig:exp7_10_tops_times}{{33}{31}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment seven}{figure.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Comparative Results}{31}{subsection.5.8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.8.1}Average fitness over 100 generations.}{32}{subsubsection.5.8.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {34}{\ignorespaces Here you see the average fitness over 100 generations for experiments one through seven.}}{32}{figure.34}}
+\newlabel{fig:all_avg_fit}{{34}{32}{Here you see the average fitness over 100 generations for experiments one through seven}{figure.34}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.8.2}Fitness of every 10th generation top performer.}{33}{subsubsection.5.8.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {35}{\ignorespaces Here you see the fitness of every 10th generation top performer for experiments one through seven.}}{33}{figure.35}}
+\newlabel{fig:all_10_tops}{{35}{33}{Here you see the fitness of every 10th generation top performer for experiments one through seven}{figure.35}{}}
 \bibstyle{plain}
 \bibdata{bibliography.bib}
-\bibcite{predictive_models}{1}
-\bibcite{self_adapt}{2}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Average ball-in-play time (in seconds) of five rounds per every 10th generation top performer.}{30}}
-\@writefile{lof}{\contentsline {figure}{\numberline {36}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiment one through seven.}}{30}}
-\newlabel{fig:all_10_tops_times}{{36}{30}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{30}}
+\bibcite{neuralnetworks}{1}
+\bibcite{predictive_models}{2}
+\bibcite{genselect}{3}
+\bibcite{geneticalgorithm}{4}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.8.3}Average ball-in-play time (in seconds) of five rounds per every 10th generation top performer.}{34}{subsubsection.5.8.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {36}{\ignorespaces Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiments one through seven.}}{34}{figure.36}}
+\newlabel{fig:all_10_tops_times}{{36}{34}{Here you see the average ball-in-play time (in seconds) of five rounds per every 10th generation top performer for experiments one through seven}{figure.36}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{34}{section.6}}
+\bibcite{self_adapt}{5}
