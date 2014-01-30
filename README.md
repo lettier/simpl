@@ -6,5 +6,5 @@ Simple pong learner (SimPL) that utilizes a feed-forward neural network for padd
 
 Playable at http://www.lettier.com/simpl/.
 
-_(C) 2013 David Lettier._  
+_(C) 2014 David Lettier._  
 http://www.lettier.com/

@@ -1,6 +1,6 @@
 /*
  * 
- * David Lettier (C) 2013.
+ * David Lettier (C) 2014.
  * 
  * http://www.lettier.com/
  * 
@@ -67,15 +67,6 @@ function Physics_Object( dynamic_object, angle, magnitude )
 	
 		if ( time_delta == undefined ) { console.warn( "[Physics_Object:get_predicted_bounding_box] Time delta not set." ); time_delta = 0; }
 		
-		// Get the bounding box coordinates of the object as if it was advanced by its velocity * time_delta step. 
-		
-		var center_copy = deep_copy( this.dynamic_object.get_center( ) );
-		
-		var velocity_copy = deep_copy( this.get_velocity( ) );
-		
-		var new_center_x = center_copy.x + ( velocity_copy.x * time_delta );
-		var new_center_y = center_copy.y + ( velocity_copy.y * time_delta );
-	
 		function Predicted_Bounding_Box( new_center_x, new_center_y, width, height )
 		{
 			
@@ -112,6 +103,15 @@ function Physics_Object( dynamic_object, angle, magnitude )
 			}
 			
 		}
+		
+		// Get the bounding box coordinates of the object as if it was advanced by its velocity * time_delta step. 
+		
+		var center_copy = deep_copy( this.dynamic_object.get_center( ) );
+		
+		var velocity_copy = deep_copy( this.get_velocity( ) );
+		
+		var new_center_x = center_copy.x + ( velocity_copy.x * time_delta );
+		var new_center_y = center_copy.y + ( velocity_copy.y * time_delta );
 		
 		var predicted_bound_box = new Predicted_Bounding_Box( new_center_x, new_center_y, deep_copy( this.dynamic_object.get_width( ) ), deep_copy( this.dynamic_object.get_height( ) ) );
 		
