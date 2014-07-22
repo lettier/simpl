@@ -4,7 +4,9 @@
  * 
  * http://www.lettier.com/
  * 
- * Code ported and modified to JS from original C++ source ( http://www.ai-junkie.com/ann/evolved/nnt1.html ) as written by Mat Buckland.
+ * Code ported to JS and heavily modified from the original C++ source 
+ * ( http://www.ai-junkie.com/ann/evolved/nnt1.html ) 
+ * as written by Mat Buckland.
  * 
  * Implements a genetic algorithm for learning.
  * 
@@ -1004,7 +1006,7 @@ function Genetic_Algorithm( params )
 			this.mutation_probability_adjustment  = 0.01 * ( ( this.best_fitness - this.average_fitness ) / ( this.best_fitness - this.worst_fitness ) );
 			
 		}
-		else if ( this.best_fitness = this.average_fitness )
+		else if ( this.best_fitness == this.average_fitness )
 		{
 			
 			this.crossover_probability_adjustment = 0.01;

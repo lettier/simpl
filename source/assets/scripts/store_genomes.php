@@ -8,7 +8,7 @@
 	* 
 	*/
 	
-	require( '' );
+	require( '/virtual/users/e14157-14235/storage/vars.php' );
 	
 	$link = mysql_connect( "localhost", $a, $b ) or die( mysql_error( ) );
 	
